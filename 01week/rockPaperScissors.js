@@ -8,16 +8,19 @@ const rl = readline.createInterface({
 });
 
 // Ah Rock Paper scissors
+// Examples below are in the format hand1:hand2
 // Ties: rock:rock; paper:paper; scissors:scissors
 // Hand1 wins: rock:scissors; paper:rock; scissors:paper
 // Hand2 wins: scissors:rock; rock:paper; paper:scissors
 function rockPaperScissors(hand1, hand2) {
 
+  // We are cleaning up the entries.  Camparison tests later in the program expect lowercase and no extra white space
   hand1 = hand1.toLowerCase().trim();
   hand2 = hand2.toLowerCase().trim();
 
   let winningMessage = '';
 
+  // Did the competitors enter rock, paper or scissors?  Or did they enter some other word.  Need to make sure.
   if ( (hand1 !== 'rock' && hand1 !== 'paper' && hand1 !== 'scissors') ||
        (hand2 !== 'rock' && hand2 !== 'paper' && hand2 !== 'scissors')
      ) {
@@ -25,6 +28,7 @@ function rockPaperScissors(hand1, hand2) {
     return winningMessage;
   }
 
+  // This code tests the competitors to determine who won (or if there is a tie)
   if (hand1 === hand2) {
     winningMessage = "It's a tie!"
   }
@@ -34,24 +38,24 @@ function rockPaperScissors(hand1, hand2) {
     } else {
       winningMessage = "Hand one wins!";
     }
-  } // else if hand 1 = rock
+  } // closing bracket to "else if" hand 1 equals rock
   else if (hand1 === 'paper') {
     if (hand2 === 'rock') {
       winningMessage = "Hand one wins!";
     } else {
       winningMessage = "Hand two wins!";
     }
-  } // else if hand 1 = paper
+  } // closing bracket to "else if" hand 1 equals paper
   else if (hand1 === 'scissors') {
     if (hand2 === 'rock') {
       winningMessage = "Hand two wins!";
     } else {
       winningMessage = "Hand one wins!";
     }
-  }  // else if hand1 = scissors
+  }  // closing bracket to "else if" hand 1 equals scissors
 
   return winningMessage;
-}  // rockPaperScissors
+}  // final closing bracket to rockPaperScissors
 
 function getPrompt() {
   rl.question('hand1: ', (answer1) => {
