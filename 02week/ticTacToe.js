@@ -37,15 +37,15 @@ function diagonalWin() {
 
 function checkForWin() {
   if (horizontalWin()) {
-    printBoard();
+    printBoard();  // refreshes the screen and shows the last play prior to the message below.
     console.log(`Congratulations player ${playerTurn}.  You notched a horizontal win`);
     return true;
   } else if (verticalWin()) {
-    printBoard();
+    printBoard();  // refreshes the screen and shows the last play prior to the message below.
     console.log(`Congratulations player ${playerTurn}.  You notched a vertical win`);
     return true;
   } else if (diagonalWin()) {
-    printBoard();
+    printBoard();  // refreshes the screen and shows the last play prior to the message below.
     console.log(`Congratulations player ${playerTurn}.  You notched a diagonal win`);
     return true;
   }
@@ -53,7 +53,7 @@ function checkForWin() {
 }
 
 function checkForTie() {
-  return board.every(square => square.trim() !== '');
+  return board[0].every(square => square.trim() !== '') && board[1].every(square => square.trim() !== '') && board[2].every(square => square.trim() !== '');
 }
 
 function ticTacToe(row, column) {
@@ -73,8 +73,14 @@ function ticTacToe(row, column) {
     if (!board[row][column].trim() ) {  // This test makes sure the square is empty.
       board[row][column] = playerTurn;  // set the square equal to the current player.
 
-      if (!checkForWin()) {  // checkForWin returns TRUE if someone won.  It returns FALSE if no one has won yet.
-
+      if (checkForWin()) {  // checkForWin returns TRUE if someone won.  It returns FALSE if no one has won yet.
+        console.log(`Yes we have a winner folks... player ${playerTurn}.  Start a new game`);
+        return true;  // returning true ends the game.  We have a winner.
+      } else if (checkForTie()) {
+        printBoard();  // refreshes the screen and shows the last play prior to the message below.
+        console.log(`Yes we have a tie folks.  No one won.  Start a new game`);
+        return true;  // returning true ends the game.  We have a winner.
+      } else {
         // Ok no one has won yet.
         // this logic controls who's turn it is.
         if (playerTurn === 'X') {
@@ -82,9 +88,6 @@ function ticTacToe(row, column) {
         } else {
           playerTurn = 'X';
         }
-      } else {
-        console.log(`Yes we have a winner folks... player ${playerTurn}.  Start a new game`);
-        return true;  // returning true ends the game.  We have a winner.
       }
     } else {
       console.log('Hey, that square is already filled in.  Select another');
@@ -100,8 +103,8 @@ function getPrompt() {
   console.log("It's Player " + playerTurn + "'s turn.");
   rl.question('row: ', (row) => {
     rl.question('column: ', (column) => {
-      // I wrapped ticTacToe around a condition so I can "end" the game.  ticTacToe returns TRUE if someone won the game and
-      // therefore the game is over.  It returns FALSE if the game is still going on.
+      // I wrapped ticTacToe function around a condition so I can "end" the game.  ticTacToe returns TRUE if someone won the game
+      // or there is a tie.  The game is over.  It returns FALSE if the game is still going on.
       if (!ticTacToe(row, column)) {
         getPrompt();
       } else {
