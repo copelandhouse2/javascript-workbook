@@ -13,25 +13,44 @@ let stacks = {
   c: []
 };
 
+const winCount = stacks.a.length;
+let message = '';
+
 function printStacks() {
   console.log("a: " + stacks.a);
   console.log("b: " + stacks.b);
   console.log("c: " + stacks.c);
 }
 
-function movePiece(sourceStack,targetStack) {
-  // Your code here
-
+function movePiece(startStack,endStack) {
+  // const disktoMove = stacks[startStack].pop();
+  // console.log(disktoMove);
+  stacks[endStack].push(stacks[startStack].pop());
 }
 
-function isLegal(sourceStack, targetStack) {
-  // Your code here
+function isLegal(startStack, endStack) {
+  // console.log('Start: ' + stacks[startStack][stacks[startStack].length-1]);
+  // console.log(`End: ${stacks[endStack].length}`);
 
+  if (stacks[startStack].length === 0) {
+    return false;
+  } else if (stacks[endStack].length === 0) {
+    return true;
+  } else {
+    return stacks[startStack][stacks[startStack].length-1] < stacks[endStack][stacks[endStack].length-1];
+  }
 }
 
 function checkForWin() {
-  // Your code here
-
+  // console.log(`win count: ${winCount}`);
+  // console.log(`stack a count: ${stacks.a.length}`);
+  // console.log(`stack b count: ${stacks.b.length}`);
+  // console.log(`stack c count: ${stacks.c.length}`);
+  if (stacks.b.length === winCount || stacks.c.length === winCount) {
+    return true;
+  }
+  return false;
+  // stacks.b.length === winCount || stacks.c.length === winCount ? (return true) : (return false);
 }
 
 function towersOfHanoi(startStack, endStack) {
@@ -86,7 +105,10 @@ function towersOfHanoi(startStack, endStack) {
         console.log('Congratulations!  You won!');
       }
     } else {
-      console.log('That is an illegal move.  Cannot place a larger disk on a smaller one.  Try again');
+      console.log('That is an illegal move.  One of these issues...  Try again\n\n');
+      console.log('  a) Cannot place a larger disk on a smaller one.');
+      console.log('  b) Start stack is empty');
+
     }
   } else {
     console.log('Please enter correct stack name... a, b, or c');
