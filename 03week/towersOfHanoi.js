@@ -35,7 +35,42 @@ function checkForWin() {
 }
 
 function towersOfHanoi(startStack, endStack) {
-  // Your code here
+  // first, make sure the user typed in either stack a, b, or c.  User must enter a, b, c.  Nothing else.
+  // the source stack selected must not be empty.  There should be a disk there.
+  // (isLegal): If the last value (selected disk) on source stack is smaller than the last value on the target stack
+  // then call: (movePiece).  Otherwise, prompt the user to try again.  Clearly, the user is making an illegal move.
+  // (checkForWin) If stack b or stack c has all the disks, WIN.
+
+  // If valid entries then
+  //   if isLegal() then
+  //     movePiece()
+  //     if checkForWin() then
+  //       Announce winner!
+  //     else
+  //       Continue playing game
+  //     end if
+  //   else
+  //     Tell user move cannot be made.  Make another selection
+  //   end if
+  // else
+  //   Tell user to enter correct stack values
+  // end if
+
+  // isLegal(sourceStack, targetStack)  // the tests expect this function to take in 2 values.
+  //  if source stack array.last < target stack array.last then
+  //    return true
+  //  end if
+  //  return false
+
+  // movePiece()
+  //  target stack array.push(source stack array.pop)
+  //  return
+
+  // checkForWin()
+  //  if b.array.length === 4 || c.array.length === 4 then
+  //    return true
+  //  end if
+  //  return false
 
 }
 
