@@ -19,12 +19,12 @@ function printStacks() {
   console.log("c: " + stacks.c);
 }
 
-function movePiece() {
+function movePiece(sourceStack,targetStack) {
   // Your code here
 
 }
 
-function isLegal() {
+function isLegal(sourceStack, targetStack) {
   // Your code here
 
 }
@@ -71,6 +71,26 @@ function towersOfHanoi(startStack, endStack) {
   //    return true
   //  end if
   //  return false
+  const validUserEntry = (myStack) => {
+    const validStacksArr = ['a','b','c'];
+    return validStacksArr.some(validStack => myStack === validStack);
+  }
+
+  startStack = startStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
+  endStack = endStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
+
+  if (validUserEntry(startStack) && validUserEntry(endStack)) {
+    if (isLegal(startStack, endStack)) {
+      movePiece(startStack, endStack);
+      if (checkForWin()) {
+        console.log('Congratulations!  You won!');
+      }
+    } else {
+      console.log('That is an illegal move.  Cannot place a larger disk on a smaller one.  Try again');
+    }
+  } else {
+    console.log('Please enter correct stack name... a, b, or c');
+  }
 
 }
 
