@@ -105,15 +105,15 @@ function towersOfHanoi(startStack, endStack) {
     return validStacksArr.some(validStack => myStack === validStack);
   }
 
-  startStack = startStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
-  endStack = endStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
+  startStack = startStack.toLowerCase().trim(); // ensures user entry will be lower case.  Also gets rid of spaces on either end.
+  endStack = endStack.toLowerCase().trim();     // ensures user entry will be lower case.  Also gets rid of spaces on either end.
 
   if (validUserEntry(startStack) && validUserEntry(endStack)) {  // test to make sure a, b, or c is entered.
-    if (isLegal(startStack, endStack)) {  // test to make sure move is legal
-      movePiece(startStack, endStack);  // Confirmed it is a legal move.  Go ahead and pop disc from startStack and push to endStack
-      if (checkForWin()) {  // See if all discs have been moved to stack b or c.  If so, then WIN.
+    if (isLegal(startStack, endStack)) {   // test to make sure move is legal
+      movePiece(startStack, endStack);     // Confirmed it is a legal move.  Go ahead and pop disc from startStack and push to endStack
+      if (checkForWin()) {                 // See if all discs have been moved to stack b or c.  If so, then WIN.
         console.log('Congratulations!  You won!');
-        return true;  // Returning true ends the game.  We have a winner.
+        return true;                       // Returning true ends the game.  We have a winner.
       }
     } else {
       console.log('That is an illegal move.  One of these issues...  Try again\n');
@@ -125,7 +125,7 @@ function towersOfHanoi(startStack, endStack) {
     console.log('Please enter correct stack name... a, b, or c');
   }
 
-  return false;  // No win yet.  Returning false keeps the game going.
+  return false;                            // No win yet.  Returning false keeps the game going.
 }
 
 function getPrompt() {
