@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 });
 
 let stacks = {
-  a: [4, 3, 2, 1],
+  a: [3, 2, 1],
   b: [],
   c: []
 };
@@ -22,12 +22,16 @@ function printStacks() {
   console.log("c: " + stacks.c);
 }
 
+// At this point in the code, the user data has been vetted and the move has been confirmed to be legal.
+// This function simply pops the top "disc" off of start Stack and pushes in on end Stack
 function movePiece(startStack,endStack) {
   // const disktoMove = stacks[startStack].pop();
   // console.log(disktoMove);
   stacks[endStack].push(stacks[startStack].pop());
 }
 
+// The user data has been tested to make sure they are valid values.  Now we need to test a bit further to see if the
+// move from source to end is valid.  This function does that.
 function isLegal(startStack, endStack) {
   // console.log('Start: ' + stacks[startStack][stacks[startStack].length-1]);
   // console.log(`End: ${stacks[endStack].length}`);
@@ -41,6 +45,7 @@ function isLegal(startStack, endStack) {
   }
 }
 
+// Function tests to see if all the discs are on the other stacks.  If they are, that is a WIN.
 function checkForWin() {
   // console.log(`win count: ${winCount}`);
   // console.log(`stack a count: ${stacks.a.length}`);
@@ -53,7 +58,9 @@ function checkForWin() {
   // stacks.b.length === winCount || stacks.c.length === winCount ? (return true) : (return false);
 }
 
+// this function is the main driver function.
 function towersOfHanoi(startStack, endStack) {
+  /****************************** WHITE BOARD NOTES *******************************
   // first, make sure the user typed in either stack a, b, or c.  User must enter a, b, c.  Nothing else.
   // the source stack selected must not be empty.  There should be a disk there.
   // (isLegal): If the last value (selected disk) on source stack is smaller than the last value on the target stack
@@ -90,6 +97,9 @@ function towersOfHanoi(startStack, endStack) {
   //    return true
   //  end if
   //  return false
+  *************************************************************************/
+
+  // Tests to make sure user entries are only a, b, or c.
   const validUserEntry = (myStack) => {
     const validStacksArr = ['a','b','c'];
     return validStacksArr.some(validStack => myStack === validStack);
@@ -98,14 +108,15 @@ function towersOfHanoi(startStack, endStack) {
   startStack = startStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
   endStack = endStack.toLowerCase().trim();  // ensures user entry will be lower case.  Also gets rid of spaces on either end.
 
-  if (validUserEntry(startStack) && validUserEntry(endStack)) {
-    if (isLegal(startStack, endStack)) {
-      movePiece(startStack, endStack);
-      if (checkForWin()) {
+  if (validUserEntry(startStack) && validUserEntry(endStack)) {  // test to make sure a, b, or c is entered.
+    if (isLegal(startStack, endStack)) {  // test to make sure move is legal
+      movePiece(startStack, endStack);  // Confirmed it is a legal move.  Go ahead and pop disc from startStack and push to endStack
+      if (checkForWin()) {  // See if all discs have been moved to stack b or c.  If so, then WIN.
         console.log('Congratulations!  You won!');
+        return true;  // Returning true ends the game.  We have a winner.
       }
     } else {
-      console.log('That is an illegal move.  One of these issues...  Try again\n\n');
+      console.log('That is an illegal move.  One of these issues...  Try again\n');
       console.log('  a) Cannot place a larger disk on a smaller one.');
       console.log('  b) Start stack is empty');
 
@@ -114,14 +125,20 @@ function towersOfHanoi(startStack, endStack) {
     console.log('Please enter correct stack name... a, b, or c');
   }
 
+  return false;  // No win yet.  Returning false keeps the game going.
 }
 
 function getPrompt() {
   printStacks();
   rl.question('start stack: ', (startStack) => {
     rl.question('end stack: ', (endStack) => {
-      towersOfHanoi(startStack, endStack);
-      getPrompt();
+      // I wrapped towersOfHanoi function around a condition so I can "end" the game.  towersOfHanoi returns TRUE if someone
+      // won the game.  It returns FALSE if the game is still going on.
+      if (!towersOfHanoi(startStack, endStack)) {
+        getPrompt();
+      } else {
+        process.exit(0);  // this command exits the Program
+      }
     });
   });
 }
