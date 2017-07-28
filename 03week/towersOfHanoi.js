@@ -51,11 +51,7 @@ function checkForWin() {
   // console.log(`stack a count: ${stacks.a.length}`);
   // console.log(`stack b count: ${stacks.b.length}`);
   // console.log(`stack c count: ${stacks.c.length}`);
-  if (stacks.b.length === winCount || stacks.c.length === winCount) {
-    return true;
-  }
-  return false;
-  // stacks.b.length === winCount || stacks.c.length === winCount ? (return true) : (return false);
+  return stacks.b.length === winCount || stacks.c.length === winCount;
 }
 
 // this function is the main driver function.
