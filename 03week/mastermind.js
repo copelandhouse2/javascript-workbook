@@ -90,8 +90,7 @@ function validEntry(guess) {
   console.log(solution);
   console.log(guess);
   // Testing for length and testing if all the letters in guess are valid.
-  return guess.length === 4;
-  // guess.length === solution.length && guess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
+  return guess.length === solution.length && guess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
 }
 
 function mastermind(guess) {
