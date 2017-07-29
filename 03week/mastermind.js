@@ -81,17 +81,25 @@ function generateHint(myGuess) {
   let exactMatch = 0;
   let correctLetter = 0;
   let solutionArr = solution.split('');
-  for (let i=0; i<myGuess.length; i++) {
-    console.log(myGuess[i], solution[i]);
-    if (myGuess[i] === solution[i]) {
+  let myGuessArr = myGuess.split('');
+  // This for loop tests for exact match
+  for (let i=0; i<myGuessArr.length; i++) {
+    if (myGuess[i] === solutionArr[i]) {
         exactMatch++;
-        solutionArr[i] = '';  // clear out value.  This sets us up to look for correct letter.
+        solutionArr[i] = '';  // clear out value.  This sets us up to look for correct letter test.
+        myGuessArr[i] = '';  // clear out value.  This sets us up to look for correct letter test.
     }
+    // console.log(myGuessArr[i], solutionArr[i]);  // This is our debug to show us the solution while testing.
   }
-  for (let i=0; i<myGuess.length; i++) {
-    if (solutionArr[i]) {
-      if (solutionArr.some(solutionLetter => myGuess[i] === solutionLetter)) {
-        correctLetter++;
+  // This for loop now looks for a correct letter, but not in the right position.
+  for (let i=0; i<myGuessArr.length; i++) {
+    // console.log(myGuessArr[i], solutionArr[i]);  // This is our debug to show us the solution while testing.
+    if (myGuessArr[i]) {
+      for (let j=0; j<solutionArr.length; j++) {
+        if (myGuessArr[i] === solutionArr[j]) {
+          correctLetter++;
+          solutionArr[j] = '';  // clear out value.  This ensures we don't count duplicates.
+        }
       }
     }
   }
@@ -105,14 +113,15 @@ function validEntry(myGuess) {
 }
 
 function mastermind(guess) {
-  //solution = 'abcd'; // Comment this out to generate a random solution
+  solution = 'abca'; // Comment this out to generate a random solution
   guess = guess.toLowerCase().trim();  // this is a "cleanup" statement will change all letters to lowercase and remove spaces.
 
   if (validEntry(guess)) {
     if (guess === solution) {
       console.log('Great job.  You won');
     } else {
-      console.log(`Hint (Exact Match-Correct Letter): ${generateHint(guess)}`);
+      board[board.length] = `${guess}:  ${generateHint(guess)}`;
+      // console.log(`Hint (Exact Match-Correct Letter): ${generateHint(guess)}`);
     }
   } else {
     console.log('Hey dude, you need to re-enter your guess.  Use letters a-h, only 4 letters')
