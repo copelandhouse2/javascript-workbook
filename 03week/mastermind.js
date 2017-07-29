@@ -76,21 +76,32 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateHint() {
+function generateHint(myGuess) {
   // your code here
-  //     if myGuess[i] = solution[i] then
-  //       exactMatch++
-  //     else if (solutionArr.some(value => myGuess[i] === value))
-  console.log('generating a hint for you');
+  let exactMatch = 0;
+  let correctLetter = 0;
+  let solutionArr = solution.split('');
+  for (let i=0; i<myGuess.length; i++) {
+    console.log(myGuess[i], solution[i]);
+    if (myGuess[i] === solution[i]) {
+        exactMatch++;
+        solutionArr[i] = '';  // clear out value.  This sets us up to look for correct letter.
+    }
+  }
+  for (let i=0; i<myGuess.length; i++) {
+    if (solutionArr[i]) {
+      if (solutionArr.some(solutionLetter => myGuess[i] === solutionLetter)) {
+        correctLetter++;
+      }
+    }
+  }
+  return `${exactMatch}-${correctLetter}`;
 }
 
 // validEntry() tests the user's entry.  Valid entries only contain letters a-h.  Only 4 letters.
-function validEntry(guess) {
-  // Make sure length is correct
-  console.log(solution);
-  console.log(guess);
+function validEntry(myGuess) {
   // Testing for length and testing if all the letters in guess are valid.
-  return guess.length === solution.length && guess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
+  return myGuess.length === solution.length && myGuess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
 }
 
 function mastermind(guess) {
@@ -101,7 +112,7 @@ function mastermind(guess) {
     if (guess === solution) {
       console.log('Great job.  You won');
     } else {
-      generateHint();
+      console.log(`Hint (Exact Match-Correct Letter): ${generateHint(guess)}`);
     }
   } else {
     console.log('Hey dude, you need to re-enter your guess.  Use letters a-h, only 4 letters')
