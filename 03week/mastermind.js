@@ -99,6 +99,7 @@ function generateHint(myGuess) {
         if (myGuessArr[i] === solutionArr[j]) {
           correctLetter++;
           solutionArr[j] = '';  // clear out value.  This ensures we don't count duplicates.
+          break;  // just in case there are duplicate values in the solution, once it finds a letter match, break out.
         }
       }
     }
@@ -113,28 +114,44 @@ function validEntry(myGuess) {
 }
 
 function mastermind(guess) {
-  solution = 'abca'; // Comment this out to generate a random solution
+  // solution = 'caa'; // Comment this out to generate a random solution
   guess = guess.toLowerCase().trim();  // this is a "cleanup" statement will change all letters to lowercase and remove spaces.
 
   if (validEntry(guess)) {
     if (guess === solution) {
-      console.log('Great job.  You won');
+      board[board.length] = `${guess}  :  ${generateHint(guess)}`;
+      return true;  // player won!
     } else {
-      board[board.length] = `${guess}:  ${generateHint(guess)}`;
-      // console.log(`Hint (Exact Match-Correct Letter): ${generateHint(guess)}`);
+      board[board.length] = `${guess}  :  ${generateHint(guess)}`;
     }
   } else {
-    console.log('Hey dude, you need to re-enter your guess.  Use letters a-h, only 4 letters')
+    console.log('Hey dude, you need to re-enter your guess.  Use letters a-h.  Also, only 4 letters')
   }
-
+  return false;  // game is still going on.
 }
 
 
 function getPrompt() {
-  rl.question('guess: ', (guess) => {
-    mastermind(guess);
-    printBoard();
-    getPrompt();
+  rl.question('guess or (Q to quit): ', (guess) => {
+    // This statement gives the user some control to quit the game instead of CTRL-C.
+    if (guess.toLowerCase().trim() === 'q') {
+      console.log('Quiting...');
+      process.exit(0);
+    }
+
+    if (mastermind(guess)) {
+      printBoard();
+      console.log(`Great job.  You won!\nYou cracked the code in ${board.length} moves.`);
+      console.log('Starting new game...');
+      // initialize variables...
+      while (board.length > 0) {board.pop();}  // clears board.
+      solution = '';  // set solution to NULL before generating new combination.  Otherwise, it will append to the old.
+      generateSolution();
+      getPrompt();
+    } else {
+        printBoard();
+        getPrompt();
+    }
   });
 }
 
