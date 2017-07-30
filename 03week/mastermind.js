@@ -130,7 +130,6 @@ function mastermind(guess) {
   return false;  // game is still going on.
 }
 
-
 function getPrompt() {
   rl.question('guess or (Q to quit): ', (guess) => {
     // This statement gives the user some control to quit the game instead of CTRL-C.
