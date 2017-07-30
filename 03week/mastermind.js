@@ -77,33 +77,36 @@ function getRandomInt(min, max) {
 }
 
 function generateHint(myGuess) {
-  // your code here
+
+  // Initializing...
   let exactMatch = 0;
   let correctLetter = 0;
+  let matchIndex = -1;
+  // creating arrays out of the strings.
   let solutionArr = solution.split('');
   let myGuessArr = myGuess.split('');
-  // This for loop tests for exact match
-  for (let i=0; i<myGuessArr.length; i++) {
-    if (myGuess[i] === solutionArr[i]) {
-        exactMatch++;
-        solutionArr[i] = '';  // clear out value.  This sets us up to look for correct letter test.
-        myGuessArr[i] = '';  // clear out value.  This sets us up to look for correct letter test.
+
+  // This piece of code tests for exact match
+  myGuessArr.forEach((letter, index) => {
+    if (letter === solutionArr[index]) {
+      exactMatch++;
+      // clear out value.  This sets us up to look for correct letter test later.  These won't be considered.
+      solutionArr[index] = '';
+      myGuessArr[index] = '';
     }
-    // console.log(myGuessArr[i], solutionArr[i]);  // This is our debug to show us the solution while testing.
-  }
-  // This for loop now looks for a correct letter, but not in the right position.
-  for (let i=0; i<myGuessArr.length; i++) {
-    // console.log(myGuessArr[i], solutionArr[i]);  // This is our debug to show us the solution while testing.
-    if (myGuessArr[i]) {
-      for (let j=0; j<solutionArr.length; j++) {
-        if (myGuessArr[i] === solutionArr[j]) {
-          correctLetter++;
-          solutionArr[j] = '';  // clear out value.  This ensures we don't count duplicates.
-          break;  // just in case there are duplicate values in the solution, once it finds a letter match, break out.
-        }
+  });
+
+  // This piece of code tests for correct letter only
+  myGuessArr.forEach((letter) => {
+    if (letter) {  // letter could be null from previous forEach statement.
+      matchIndex = solutionArr.indexOf(letter);  // Let's find a matching letter in the solution!
+      if (matchIndex !== -1) {  // We found a letter match in the string.
+        correctLetter++
+        solutionArr[matchIndex] = '';  // clear out value so value won't be considered with next letter tests.
       }
-    }
-  }
+    }  // closing brace for if (letter)
+  });
+
   return `${exactMatch}-${correctLetter}`;
 }
 
@@ -114,7 +117,7 @@ function validEntry(myGuess) {
 }
 
 function mastermind(guess) {
-  // solution = 'caa'; // Comment this out to generate a random solution
+  // solution = 'abca'; // Comment this out to generate a random solution
   guess = guess.toLowerCase().trim();  // this is a "cleanup" statement will change all letters to lowercase and remove spaces.
 
   if (validEntry(guess)) {
@@ -143,13 +146,13 @@ function getPrompt() {
       console.log(`Great job.  You won!\nYou cracked the code in ${board.length} moves.`);
       console.log('Starting new game...');
       // initialize variables...
-      while (board.length > 0) {board.pop();}  // clears board.
+      board.length = 0;  // clears board.
       solution = '';  // set solution to NULL before generating new combination.  Otherwise, it will append to the old.
       generateSolution();
       getPrompt();
     } else {
-        printBoard();
-        getPrompt();
+      printBoard();
+      getPrompt();
     }
   });
 }
