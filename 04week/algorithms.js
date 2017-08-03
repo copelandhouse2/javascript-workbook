@@ -56,6 +56,20 @@ function mergeSort(ary) {
   // only 1 element on either the left of rigt side.
   // Now call merge.  Merge compares the two sub arrays and orders them.
   // Ultimately, you get back to 2 sorted sub-arrays.  Merge will finally order them.
+  if (ary.length < 2) return ary;
+
+  let middle = Math.floor(ary.length / 2);
+  let leftSide = ary.slice(0, middle);
+  let rightSide = ary.slice(middle);
+
+  return merge(mergeSort(leftSide), mergeSort(rightSide));
+}
+
+function merge (left, right) {
+  let result = [];
+  while (left.length && right.length)
+    result.push(left[0] < right[0]? left.shift() : right.shift());
+  return result.concat(left.length? left : right);
 }
 
 console.log(arr);
