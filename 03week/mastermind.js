@@ -58,6 +58,7 @@ const rl = readline.createInterface({
 let board = [];
 let solution = '';
 let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+const GUESSLIMIT = 20;
 
 function printBoard() {
   for (let i = 0; i < board.length; i++) {
@@ -116,19 +117,18 @@ function validEntry(myGuess) {
   return myGuess.length === solution.length && myGuess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
 }
 
+// This i
 function mastermind(guess) {
   // solution = 'abca'; // Comment this out to generate a random solution
   guess = guess.toLowerCase().trim();  // this is a "cleanup" statement will change all letters to lowercase and remove spaces.
 
-  if (validEntry(guess)) {
+  if (validEntry(guess)) {  // Testing to make sure
+    board[board.length] = `${guess}  :  ${generateHint(guess)}`;
     if (guess === solution) {
-      board[board.length] = `${guess}  :  ${generateHint(guess)}`;
       return true;  // player won!
-    } else {
-      board[board.length] = `${guess}  :  ${generateHint(guess)}`;
     }
   } else {
-    console.log('Hey dude, you need to re-enter your guess.  Use letters a-h.  Also, only 4 letters')
+    console.log('Hey there, you need to re-enter your guess.  Use letters a-h.  Also, only 4 letters')
   }
   return false;  // game is still going on.
 }
@@ -144,6 +144,15 @@ function getPrompt() {
     if (mastermind(guess)) {
       printBoard();
       console.log(`Great job.  You won!\nYou cracked the code in ${board.length} moves.`);
+      console.log('Starting new game...');
+      // initialize variables...
+      board.length = 0;  // clears board.
+      solution = '';  // set solution to NULL before generating new combination.  Otherwise, it will append to the old.
+      generateSolution();
+      getPrompt();
+    } else if (board.length === GUESSLIMIT) {
+      printBoard();
+      console.log(`Sorry, you did not guess within ${GUESSLIMIT} moves.  Answer: ${solution}.`);
       console.log('Starting new game...');
       // initialize variables...
       board.length = 0;  // clears board.
