@@ -9,12 +9,13 @@ function getRandomInt(min, max) {
 }
 
 let arr = [];
+let flip = false;
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 10; i++) {
   arr.push(getRandomInt(0, 1000));
 }
 
-function bubbleSort(arr) {
+function bubbleSort(ary) {
   // Using bubble sort alrgorithm to sort passed array.
   // set flip flag equal to false
   // Loop through array
@@ -28,12 +29,37 @@ function bubbleSort(arr) {
   // else // array should be sorted
   //   return arr
   // end if
-  
+  for (let i = 0; i< ary.length; i++){
+    if (ary[i] > ary[i + 1]) {
+      flip = true;
+      // using the swap without temp algorithm!  Ex: ary[i] = 10, ary[i+1] = 6
+      ary[i+1] = ary[i+1] - ary[i];  //Ex. 6 - 10 = -4
+      ary[i]   = ary[i] + ary[i+1];  //Ex.  10 + (-4) = 6
+      ary[i+1] = ary[i] - ary[i+1];  //Ex.  6 - (-4) = 10
+    }
+  }
+  // flip? (flip = false, return bubbleSort(ary)) : return(ary); // doesn't work.
+  if (flip) {
+    flip = false;  // setting my check
+    return bubbleSort(ary);
+  } else {
+    return ary;
+  }
 }
 
-function mergeSort(arr) {
-  // Your code here
+console.log(arr);
+console.log(bubbleSort(arr));
+
+function mergeSort(ary) {
+  // Merge sort is a recursive algorithm.
+  // It is a divide in half approach.  Keep dviding until you get to
+  // only 1 element on either the left of rigt side.
+  // Now call merge.  Merge compares the two sub arrays and orders them.
+  // Ultimately, you get back to 2 sorted sub-arrays.  Merge will finally order them.
 }
+
+console.log(arr);
+console.log(mergeSort(arr));
 
 function binarySearch(arr, item) {
   // Your code here
