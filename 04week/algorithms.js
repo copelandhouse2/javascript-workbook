@@ -15,7 +15,20 @@ for (let i = 0; i < 1000; i++) {
 }
 
 function bubbleSort(arr) {
-  // Your code here
+  // Using bubble sort alrgorithm to sort passed array.
+  // set flip flag equal to false
+  // Loop through array
+  //   Compare array[n] to array[n+1]
+  //   if array[n] is larger, then flip
+  //   set flip flag equal to true.
+  // End Loop
+  // if flip flag = true
+  //   set flip flag back to false
+  //   return bubbleSort(arr)
+  // else // array should be sorted
+  //   return arr
+  // end if
+  
 }
 
 function mergeSort(arr) {
