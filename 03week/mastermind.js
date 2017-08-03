@@ -1,4 +1,52 @@
 'use strict';
+/******************************** WHITE BOARD NOTES ****************************************
+// Mastermind... There is a set of items (letters, numbers, colors, shapes, etc.), the Gamemaster selects items from this set
+// and places them in a certain order.  The goal is for you to guess the right items in the right order.
+// The Gamemaster (the one that knows the right combination), gives you 2 hints after each guess.
+//    a) right item, right place
+//    b) right item, wrong place.
+// if it is a wrong item (it is also by definition in the wrong place), so it is not counted.
+// You can use these hints to improve on your guess.
+// You continue guessing and receiving hints until you get the right combination.
+//
+// For our computer game, the items are letters... a-h.
+// The Computer is Gamemaster.  It will randomly select 4 letters in a certain combination.  This is the winning combination
+// I will make a guess.  Need to test to make sure player only select letters a-h.  Need to test that player only pick 4.
+// Computer will test for win.  If the player won, announce winner.  End game.
+// If player didn't win, Computer will tell player how many are "right item right order" - "right item wrong order".  It will look like 1-3, 2-1, etc.
+// The player will guess again.
+//
+// ********************************** PSEUDO CODE *************************************
+// generateSolution() // Given.  Computer selects winning combination (combo of 4 letters)
+// if valid entry(guess) then  // Test for a) letters a-h, b) guess.length = solution.length (just 4 letters)
+//   if guess = solution then
+//     Announce winner and number of guesses it took!
+//     End game
+//   else
+//     guessCount++
+//     console.log(generateHint(myGuess))
+//     Continue playing game
+//   end if
+// else
+//   Tell user to make another selection
+// end if
+
+// generateHint(myGuess)
+//   // Test for exact Match
+//   Loop on the characters of myGuess
+//     if myGuess[i] === solution[i]
+//       exactMatch++
+//     end if
+//   end loop
+//
+//   // Test for matching character.  not in right position
+//   Loop on characters of myGuess
+//     if character exists in solution then
+//       matchChar++
+//     end if
+//   end loop
+//   return exactMatch + matchChar
+*****************************************************************************************/
 
 const assert = require('assert');
 const readline = require('readline');
@@ -10,6 +58,7 @@ const rl = readline.createInterface({
 let board = [];
 let solution = '';
 let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+const GUESSLIMIT = 20;
 
 function printBoard() {
   for (let i = 0; i < board.length; i++) {
@@ -28,21 +77,92 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateHint() {
-  // your code here
+function generateHint(myGuess) {
+
+  // Initializing...
+  let exactMatch = 0;
+  let correctLetter = 0;
+  let matchIndex = -1;
+  // creating arrays out of the strings.
+  let solutionArr = solution.split('');
+  let myGuessArr = myGuess.split('');
+
+  // This piece of code tests for exact match
+  myGuessArr.forEach((letter, index) => {
+    if (letter === solutionArr[index]) {
+      exactMatch++;
+      // clear out value.  This sets us up to look for correct letter test later.  These won't be considered.
+      solutionArr[index] = '';
+      myGuessArr[index] = '';
+    }
+  });
+
+  // This piece of code tests for correct letter only
+  myGuessArr.forEach((letter) => {
+    if (letter) {  // letter could be null from previous forEach statement.
+      matchIndex = solutionArr.indexOf(letter);  // Let's find a matching letter in the solution!
+      if (matchIndex !== -1) {  // We found a letter match in the string.
+        correctLetter++
+        solutionArr[matchIndex] = '';  // clear out value so value won't be considered with next letter tests.
+      }
+    }  // closing brace for if (letter)
+  });
+
+  return `${exactMatch}-${correctLetter}`;
 }
 
+// validEntry() tests the user's entry.  Valid entries only contain letters a-h.  Only 4 letters.
+function validEntry(myGuess) {
+  // Testing for length and testing if all the letters in guess are valid.
+  return myGuess.length === solution.length && myGuess.split('').every(myChar => letters.some(validLetter => myChar === validLetter));
+}
+
+// This i
 function mastermind(guess) {
-  solution = 'abcd'; // Comment this out to generate a random solution
-  // your code here
-}
+  // solution = 'abca'; // Comment this out to generate a random solution
+  guess = guess.toLowerCase().trim();  // this is a "cleanup" statement will change all letters to lowercase and remove spaces.
 
+  if (validEntry(guess)) {  // Testing to make sure
+    board[board.length] = `${guess}  :  ${generateHint(guess)}`;
+    if (guess === solution) {
+      return true;  // player won!
+    }
+  } else {
+    console.log('Hey there, you need to re-enter your guess.  Use letters a-h.  Also, only 4 letters')
+  }
+  return false;  // game is still going on.
+}
 
 function getPrompt() {
-  rl.question('guess: ', (guess) => {
-    mastermind(guess);
-    printBoard();
-    getPrompt();
+  rl.question('guess or (Q to quit): ', (guess) => {
+    // This statement gives the user some control to quit the game instead of CTRL-C.
+    if (guess.toLowerCase().trim() === 'q') {
+      console.log('Quiting...');
+      process.exit(0);
+    }
+
+    if (mastermind(guess)) {
+      printBoard();
+      console.log(`Great job.  You won!\nYou cracked the code in ${board.length} moves.`);
+      console.log('Starting new game...');
+      // initialize variables...
+      board.length = 0;  // clears board.
+      solution = '';  // set solution to NULL before generating new combination.  Otherwise, it will append to the old.
+      generateSolution();
+      getPrompt();
+    } else if (board.length === GUESSLIMIT) {
+      printBoard();
+      console.log(`Sorry, you did not guess within ${GUESSLIMIT} moves.  Answer: ${solution}.`);
+      console.log('Starting new game...');
+      // initialize variables...
+      board.length = 0;  // clears board.
+      solution = '';  // set solution to NULL before generating new combination.  Otherwise, it will append to the old.
+      generateSolution();
+      getPrompt();
+    } else {
+      printBoard();
+      getPrompt();
+    }
   });
 }
 
