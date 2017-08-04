@@ -16,6 +16,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 function bubbleSort(ary) {
+  /*********************** WHITE BOARD NOTES **************************
   // Using bubble sort alrgorithm to sort passed array.
   // set flip flag equal to false
   // Loop through array
@@ -29,6 +30,8 @@ function bubbleSort(ary) {
   // else // array should be sorted
   //   return arr
   // end if
+  ********************************************************************/
+
   for (let i = 0; i< ary.length; i++){
     if (ary[i] > ary[i + 1]) {
       flip = true;
@@ -51,12 +54,15 @@ console.log(arr);
 console.log(bubbleSort(arr));
 
 function mergeSort(ary) {
+  /*********************** WHITE BOARD NOTES **************************
   // Merge sort is a recursive algorithm.
   // It is a divide in half approach.  Keep dviding until you get to
-  // only 1 element on either the left of rigt side.
+  // only 1 element on either the left or right side.
   // Now call merge.  Merge compares the two sub arrays and orders them.
   // Ultimately, you get back to 2 sorted sub-arrays.  Merge will finally order them.
   if (ary.length < 2) return ary;
+  ********************************************************************/
+
 
   let middle = Math.floor(ary.length / 2);
   let leftSide = ary.slice(0, middle);
@@ -75,8 +81,36 @@ function merge (left, right) {
 console.log(arr);
 console.log(mergeSort(arr));
 
-function binarySearch(arr, item) {
-  // Your code here
+function binarySearch(ary, item) {
+  /*********************** WHITE BOARD NOTES **************************
+  // Assumptions...
+  // You are given a sorted data array to search on.
+  // Given a value to search for...
+  //
+  // Binary Search.
+  //   Locate the middle of the data array
+  //   Compare search value with middle.
+  //   If search value = middle value then
+  //     Congrats youfound it!
+  //     return index position in array.
+  //   else if search value < middle value
+  //     Change array to be subArray[0 - middle value-1]
+  //     return binarySearch[subArray]
+  //   else if search value > middle value then
+  //     Change array to be subArray[0 - middle value-1]
+  //     Change array to be subArray[middle value+1 - endArray.]
+  //     return binarySearch[subArray]
+  //   end if
+  //   return -1 // did not find the search value in the data array
+  ********************************************************************/
+
+  let middle  = Math.floor(ary.length / 2);
+  if (item === ary[middle]) return middle;
+  else if (item < ary[middle]) return binarySearch(ary.slice(0, middle-1), item);
+  else if (item > ary[middle]) return binarySearch(ary.slice(middle+1), item);
+  return -1;
+
+  }
 }
 
 // Tests
