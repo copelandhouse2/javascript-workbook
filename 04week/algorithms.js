@@ -81,12 +81,12 @@ function merge (left, right) {
 console.log(arr);
 console.log(mergeSort(arr));
 
-function binarySearch(ary, item) {
+function binarySearch(ary, item, start=0, end = ary.length-1) {
   /*********************** WHITE BOARD NOTES **************************
   // Assumptions...
   // You are given a sorted data array to search on.
   // Given a value to search for...
-  //
+  // ****** DID NOT WORK!  ARRAY IS BROKEN DOWN UNTIL VALUE IS 0 ELEMENT *****
   // Binary Search.
   //   Locate the middle of the data array
   //   Compare search value with middle.
@@ -102,14 +102,30 @@ function binarySearch(ary, item) {
   //     return binarySearch[subArray]
   //   end if
   //   return -1 // did not find the search value in the data array
+  // *** RESEARCHED.  FOUND RECURSIVE EXAMPLE PASSING IN START, END *********
+  //   Keep array intact (no splice, slice).  Pass in start, end search elements.
+  //   Locate the middle of the data array
+  //   Compare search value with middle.
+  //   If search value = middle value then
+  //     Congrats youfound it!
+  //     return index position in array.
+  //   else if start element = end element then
+  //     return false.  Value not in array
+  //   else if search value < middle value
+  //     Change end search = middle-1
+  //     return binarySearch(array, item, start end)
+  //   else if search value > middle value then
+  //     Change start search = middle+1
+  //     return binarySearch(array, item, start end)
+  //   end if
   ********************************************************************/
 
-  let middle  = Math.floor(ary.length / 2);
-  if (item === ary[middle]) return middle;
-  else if (item < ary[middle]) return binarySearch(ary.slice(0, middle-1), item);
-  else if (item > ary[middle]) return binarySearch(ary.slice(middle+1), item);
-  return -1;
-
+  let middle = Math.floor(start + (end-start)/2);
+  console.log(start, end, middle, ary[middle]);
+  if (item == ary[middle]) return middle;
+  else if (start>=end) return false;
+  else if (item < ary[middle]) return binarySearch(ary, item, start, middle-1);
+  else if (item > ary[middle]) return binarySearch(ary, item, middle+1, end);
   }
 }
 
