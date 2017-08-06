@@ -12,7 +12,7 @@ let arr = [];
 let flip = false;
 
 for (let i = 0; i < 10; i++) {
-  arr.push(getRandomInt(0, 1000));
+  arr.push(getRandomInt(0, 100));
 }
 
 function bubbleSort(ary) {
@@ -50,6 +50,7 @@ function bubbleSort(ary) {
   }
 }
 
+console.log('Bubble Sort');
 console.log(arr);
 console.log(bubbleSort(arr));
 
@@ -60,9 +61,8 @@ function mergeSort(ary) {
   // only 1 element on either the left or right side.
   // Now call merge.  Merge compares the two sub arrays and orders them.
   // Ultimately, you get back to 2 sorted sub-arrays.  Merge will finally order them.
-  if (ary.length < 2) return ary;
   ********************************************************************/
-
+  if (ary.length < 2) return ary;
 
   let middle = Math.floor(ary.length / 2);
   let leftSide = ary.slice(0, middle);
@@ -78,8 +78,14 @@ function merge (left, right) {
   return result.concat(left.length? left : right);
 }
 
+// Adding 10 more random values to array.
+for (let i = 0; i < 10; i++) {
+  arr.push(getRandomInt(0, 100));
+}
+console.log('Merge Sort');
 console.log(arr);
-console.log(mergeSort(arr));
+arr = mergeSort(arr);
+console.log(arr);
 
 function binarySearch(ary, item, start=0, end = ary.length-1) {
   /*********************** WHITE BOARD NOTES **************************
@@ -120,14 +126,18 @@ function binarySearch(ary, item, start=0, end = ary.length-1) {
   //   end if
   ********************************************************************/
 
-  let middle = Math.floor(start + (end-start)/2);
-  console.log(start, end, middle, ary[middle]);
-  if (item == ary[middle]) return middle;
-  else if (start>=end) return false;
-  else if (item < ary[middle]) return binarySearch(ary, item, start, middle-1);
-  else if (item > ary[middle]) return binarySearch(ary, item, middle+1, end);
-  }
+  let middle = Math.floor(start + (end-start)/2);  // find the halfway position in array
+  // console.log(start, end, middle, ary[middle]);
+  if (item == ary[middle]) return middle;   // Congrats. you found the item.
+  else if (start>=end) return false;  // item not in array
+  else if (item < ary[middle]) return binarySearch(ary, item, start, middle-1);  // item in lower half
+  else if (item > ary[middle]) return binarySearch(ary, item, middle+1, end);  // item in upper half
 }
+
+console.log('Binary Search');
+console.log(arr);
+console.log(`Looking for 42.  It is here: ${binarySearch(arr, 42)}`);
+// console.log(binarySearch(arr, 42));
 
 // Tests
 
