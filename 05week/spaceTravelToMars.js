@@ -9,7 +9,44 @@ let jobTypes = {
   programmer: 'Any Ship!'
 };
 
-// Your code here
+/**************************WHITE BOARD NOTES *************************
+// CrewMember
+//   1) should have a name, a job, a specialSkill and ship upon instantiation
+//   2) can enter a ship
+//
+// Ship
+//   3) should have a name, a type, an ability and an empty crew upon instantiation
+//   4) can return a mission statement correctly
+//
+// 1) CrewMember should have a name, a job, a specialSkill and ship upon instantiation:
+//
+// 2) CrewMember can enter a ship:
+//
+// 3) Ship should have a name, a type, an ability and an empty crew upon instantiation:
+//
+// 4) Ship can return a mission statement correctly:
+*******************************************************************************/
+
+class CrewMember {
+  constructor(name, job, specialSkill, ship) {
+    this.name = name;
+    this.job = job;
+    this.specialSkill = specialSkill;
+    this.ship = null;
+  }
+  enterShip(leShip) {
+    leShip.crew.push(this.name);
+  }
+}
+
+class Ship {
+  constructor(name, type, ability) {
+      this.name = name;
+      this.type = type;
+      this.ability = ability;
+      this.crew = [];
+  }
+}
 
 //tests
 if (typeof describe === 'function'){
