@@ -35,7 +35,9 @@ class CrewMember {
     this.ship = null;
   }
   enterShip(leShip) {
-    leShip.crew.push(this.name);
+    console.log(this.name);
+    leShip.crew.push(this);
+    this.ship = leShip;
   }
 }
 
@@ -45,6 +47,13 @@ class Ship {
       this.type = type;
       this.ability = ability;
       this.crew = [];
+  }
+  missionStatement() {
+    if (this.crew.length) {
+      return this.ability;
+    } else {
+      return "Can't perform a mission yet.";
+    }
   }
 }
 
