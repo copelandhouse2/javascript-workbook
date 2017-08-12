@@ -1,3 +1,36 @@
+/**********************WHITE BOARD NOTES *************************
+// Givens:
+// new Game (defines board) -> game.Start (creates grid) -> getPrompt (viewGrid, prompts user)
+//
+// classes:
+//   Checker, Board, Game
+//
+//
+// createGrid
+//   add r, b checker pieces
+
+// moveChecker
+// if valid entry then
+//   if validCheckerMove is true then
+//     moveChecker()
+//   else
+//     "Invalid move, try again"
+// else
+//   "Invalid entries.  Pick a valid row, column"
+// end if
+
+// validCheckerMove
+// a) the piece you're moving is yours
+// b) destination space must be empty
+// c) can only move forward.
+// c) ensure
+// b) can only move diagonally 1 space if not jumping
+
+// b) If jumping, move diagonally 2 spaces horizontally, vertically.
+//   1. Now kill the checker you jumped over.
+
+*****************************************************************/
+
 'use strict';
 
 const assert = require('assert');
@@ -10,6 +43,9 @@ const rl = readline.createInterface({
 
 function Checker() {
   // Your code here
+  // define colors?  (r)ed, (b)lack.  Use r, b as checkers and turn.
+  // use Active player
+
 }
 
 function Board() {
@@ -58,9 +94,31 @@ function Game() {
 
   this.board = new Board();
 
+  this.moveChecker = function() {
+    // if valid entry then
+    //   if validCheckerMove is true then
+    //     moveChecker()
+    //   else
+    //     "Invalid move, try again"
+    // else
+    //   "Invalid entries.  Pick a valid row, column"
+    // end if
+
+    // a) the piece you're moving is yours
+    // b) destination space must be empty
+    // c) can only move forward.
+    // c) ensure
+    // b) can only move diagonally 1 space if not jumping
+
+    // b) If jumping, move diagonally 2 spaces horizontally, vertically.
+    //   1. Now kill the checker you jumped over.
+  };
+
   this.start = function() {
-    this.board.createGrid();
-    // Your code here
+    this.board.createGrid();  // add the pieces to the grid.
+    // addPiece()
+    //
+    // this.moveChecker()
   };
 }
 
