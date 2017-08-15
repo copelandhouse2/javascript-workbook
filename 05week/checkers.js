@@ -41,12 +41,32 @@ const rl = readline.createInterface({
 });
 
 
-function Checker() {
+function Checker(color) {
   // Your code here
   // define colors?  (r)ed, (b)lack.  Use r, b as checkers and turn.
   // use Active player
+  this.color = color;
+  this.color === 'red'? this.symbol = String.fromCharCode( 0x25cf ): (color === 'black'? this.symbol = String.fromCharCode( 0x25cb ) : this.symbol = 'u');
+  let king = false;
+  let active = false;
 
-}
+  this.isKing = () => {
+    return king;
+  }
+  this.isActive = () => {
+    return active;
+  }
+
+  this.toggleKing = () => {
+    king = !king;  // consider changing symbol to upper/lowercase
+    return king;
+  }
+  this.toggleActive = () => {
+    // active? (active = false, active) : (active = true, active);
+    active = !active;
+    return active;
+  }
+}  // ending brace for Checker class
 
 function Board() {
   this.grid = [];
@@ -57,7 +77,28 @@ function Board() {
       this.grid[row] = [];
       // push in 8 columns of nulls
       for (let column = 0; column < 8; column++) {
-        this.grid[row].push(null);
+        switch (row) {
+          // rows 0-2, red checkers
+          case 0:
+          case 2:
+            column%2 === 1? this.grid[row].push(new Checker('red')) : this.grid[row].push(null);
+            break;
+          case 1:
+            column%2 === 0? this.grid[row].push(new Checker('red')) : this.grid[row].push(null);
+            break;
+          // rows 5-7, black checkers
+          case 5:
+          case 7:
+            column%2 === 0? this.grid[row].push(new Checker('black')) : this.grid[row].push(null);
+            break;
+          case 6:
+            column%2 === 1? this.grid[row].push(new Checker('black')) : this.grid[row].push(null);
+            break;
+          // rows 3-4, empty
+          default:
+            this.grid[row].push(null);
+        }
+        // this.grid[row].push(null);
       }
     }
   };
@@ -77,7 +118,9 @@ function Board() {
           rowOfCheckers.push(this.grid[row][column].symbol);
         } else {
           // just push in a blank space
-          rowOfCheckers.push(' ');
+          // rowOfCheckers.push(' ');
+          rowOfCheckers.push(String.fromCharCode( 0x25a0 ));
+
         }
       }
       // join the rowOfCheckers array to a string, separated by a space
@@ -94,7 +137,17 @@ function Game() {
 
   this.board = new Board();
 
-  this.moveChecker = function() {
+  this.playerTurn;
+
+  validEntry = function(source, dest) {
+    parseInt(source.charAt(0))
+  }
+
+  validCheckerMove = function() {
+
+  }
+
+  this.moveChecker = function(source, dest) {
     // if valid entry then
     //   if validCheckerMove is true then
     //     moveChecker()
@@ -104,6 +157,7 @@ function Game() {
     //   "Invalid entries.  Pick a valid row, column"
     // end if
 
+    // validCheckerMove tests for these things...
     // a) the piece you're moving is yours
     // b) destination space must be empty
     // c) can only move forward.
@@ -115,18 +169,17 @@ function Game() {
   };
 
   this.start = function() {
-    this.board.createGrid();  // add the pieces to the grid.
-    // addPiece()
-    //
-    // this.moveChecker()
+    this.board.createGrid();  // add the pieces to the grid
+    this.playerTurn = 'black';  // Black goes first.  Will use this to toggle player turns.
   };
 }
 
 function getPrompt() {
   game.board.viewGrid();
-  rl.question('which piece?: ', (whichPiece) => {
+  rl.question(`${game.playerTurn}, which piece?: `, (whichPiece) => {
     rl.question('to where?: ', (toWhere) => {
       game.moveChecker(whichPiece, toWhere);
+      game.playerTurn === 'red'? game.playerTurn = 'black' : game.playerTurn = 'red';
       getPrompt();
     });
   });
