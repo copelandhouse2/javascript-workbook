@@ -175,6 +175,3 @@ if (typeof describe === 'function') {
   });
 
 }
-// else {
-//   console.log('Run the tests!')
-// }
