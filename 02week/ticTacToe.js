@@ -13,6 +13,7 @@ let board = [
 ];
 
 let playerTurn = 'X';
+let turnCount = 0;
 
 function printBoard() {
   console.log('   0  1  2');
@@ -52,10 +53,6 @@ function checkForWin() {
   return false;
 }
 
-function checkForTie() {
-  return board[0].every(square => square.trim() !== '') && board[1].every(square => square.trim() !== '') && board[2].every(square => square.trim() !== '');
-}
-
 function ticTacToe(row, column) {
   // Program will control player turns using X's and O's
   // Based on row and column, populate array position in board
@@ -72,22 +69,18 @@ function ticTacToe(row, column) {
   if (validValue(row) && validValue(column)) {  // This test makes sure values entered are 0, 1, 2 and nothing else.
     if (!board[row][column].trim() ) {  // This test makes sure the square is empty.
       board[row][column] = playerTurn;  // set the square equal to the current player.
-
+      turnCount++;
       if (checkForWin()) {  // checkForWin returns TRUE if someone won.  It returns FALSE if no one has won yet.
         console.log(`Yes we have a winner folks... player ${playerTurn}.  Start a new game`);
         return true;  // returning true ends the game.  We have a winner.
-      } else if (checkForTie()) {
+      } else if (turnCount === 9) {
         printBoard();  // refreshes the screen and shows the last play prior to the message below.
         console.log(`Yes we have a tie folks.  No one won.  Start a new game`);
         return true;  // returning true ends the game.  We have a winner.
       } else {
         // Ok no one has won yet.
         // this logic controls who's turn it is.
-        if (playerTurn === 'X') {
-          playerTurn = 'O';
-        } else {
-          playerTurn = 'X';
-        }
+        playerTurn === 'X'? playerTurn = 'O' : playerTurn = 'X';
       }
     } else {
       console.log('Hey, that square is already filled in.  Select another');
