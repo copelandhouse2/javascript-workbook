@@ -64,9 +64,9 @@ function mergeSort(ary) {
   ********************************************************************/
   if (ary.length < 2) return ary;
 
-  let middle = Math.floor(ary.length / 2);
-  let leftSide = ary.slice(0, middle);
-  let rightSide = ary.slice(middle);
+  const middle = Math.floor(ary.length / 2);
+  const leftSide = ary.slice(0, middle);
+  const rightSide = ary.slice(middle);
 
   return merge(mergeSort(leftSide), mergeSort(rightSide));
 }
@@ -126,7 +126,7 @@ function binarySearch(ary, item, start=0, end = ary.length-1) {
   //   end if
   ********************************************************************/
 
-  let middle = Math.floor(start + (end-start)/2);  // find the halfway position in array
+  const middle = Math.floor(start + (end-start)/2);  // find the halfway position in array
   // console.log(start, end, middle, ary[middle]);
   if (item == ary[middle]) return middle;   // Congrats. you found the item.
   else if (start>=end) return false;  // item not in array
@@ -174,8 +174,7 @@ if (typeof describe === 'function') {
     });
   });
 
-} else {
-
-  console.log('Run the tests!')
-
 }
+// else {
+//   console.log('Run the tests!')
+// }
