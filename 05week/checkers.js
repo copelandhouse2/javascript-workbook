@@ -8,7 +8,13 @@
 //
 // createGrid
 //   add r, b checker pieces
-
+//
+// Checker(color)
+//   this.color = color
+//   this.symbol = 'r' or 'b'  (use ternary operator)
+//   consider king state
+//   consider active state
+//
 // moveChecker
 // if valid entry then
 //   if validCheckerMove is true then
@@ -28,6 +34,10 @@
 
 // b) If jumping, move diagonally 2 spaces horizontally, vertically.
 //   1. Now kill the checker you jumped over.
+//
+// testForWin()
+  if no pieces left for opposing player, then WIN!
+  if opposing player cannot move, then WIN!
 
 *****************************************************************/
 
@@ -137,50 +147,71 @@ function Game() {
 
   this.board = new Board();
 
-  this.playerTurn;
+  this.playerTurn;  // Used to alternate the players turn. black, red, black, red
+  this.messageToPlayer = '';  // variable used to store error message to player
 
-  validEntry = function(source, dest) {
-    parseInt(source.charAt(0))
+  this.validEntry = function(source, dest) {
+    // console.log('in validEntry()');  /** DEBUG **/
+    if (source.length !==2 || dest.length !== 2) {
+      this.messageToPlayer = 'you entered an invalid square.  Too many indices.';
+      return false;
+    } else if ( parseInt(source.charAt(0)) < 0 || 7 < parseInt(source.charAt(0)) || parseInt(source.charAt(1)) < 0 || 7 < parseInt(source.charAt(1)) ) {
+      this.messageToPlayer = 'you entered an invalid row-column index for source.  0-7 only.';
+      return false;
+    } else if ( parseInt(dest.charAt(0)) < 0 || 7 < parseInt(dest.charAt(0)) || parseInt(dest.charAt(1)) < 0 || 7 < parseInt(dest.charAt(1)) ) {
+      this.messageToPlayer = 'you entered an invalid row-column index for dest.  0-7 only.';
+      return false;
+    }
+    return true;
   }
 
-  validCheckerMove = function() {
-
+  this.validCheckerMove = function(source, dest) {
+    return true;
   }
 
   this.moveChecker = function(source, dest) {
-    // if valid entry then
-    //   if validCheckerMove is true then
-    //     moveChecker()
-    //   else
-    //     "Invalid move, try again"
-    // else
-    //   "Invalid entries.  Pick a valid row, column"
-    // end if
-
-    // validCheckerMove tests for these things...
-    // a) the piece you're moving is yours
-    // b) destination space must be empty
-    // c) can only move forward.
-    // c) ensure
-    // b) can only move diagonally 1 space if not jumping
-
-    // b) If jumping, move diagonally 2 spaces horizontally, vertically.
-    //   1. Now kill the checker you jumped over.
+    // console.log('in moveChecker()');  /** DEBUG **/
+    if (this.validEntry(source, dest)) {
+      // console.log('in IF validEntry()');  /** DEBUG **/
+      if (this.validCheckerMove(source, dest)) {
+        this.board.grid[dest.charAt(0)][dest.charAt(1)] = this.board.grid[source.charAt(0)][source.charAt(1)];
+        this.board.grid[source.charAt(0)][source.charAt(1)] = null;
+      } else {  // invalid move.  Try again.
+        return false;
+      }
+    } else {  // invalid entry.  Try again.
+      // console.log('in ELSE validEntry()');  /** DEBUG **/
+      return false;  // returning false takes program to a "message handler"
+    }
+    return true;
   };
 
   this.start = function() {
     this.board.createGrid();  // add the pieces to the grid
     this.playerTurn = 'black';  // Black goes first.  Will use this to toggle player turns.
   };
+
+  this.win = function() {
+    return false;
+  }
 }
 
 function getPrompt() {
   game.board.viewGrid();
   rl.question(`${game.playerTurn}, which piece?: `, (whichPiece) => {
     rl.question('to where?: ', (toWhere) => {
-      game.moveChecker(whichPiece, toWhere);
-      game.playerTurn === 'red'? game.playerTurn = 'black' : game.playerTurn = 'red';
-      getPrompt();
+      if (game.moveChecker(whichPiece, toWhere)) {  // if the move was successful, keep going.  If not, fall to message handler.
+        if (!game.win()) {  // no one has won yet... keep playing.
+          game.playerTurn === 'red'? game.playerTurn = 'black' : game.playerTurn = 'red';
+          getPrompt();
+        } else {  // somebody won!
+          console.log(`${game.playerTurn}... Congratulations!`);
+        }
+      } else {  // My simple message handler.
+        console.log(`${game.playerTurn}... ${game.messageToPlayer}`);
+        getPrompt();
+      } // if statement for game.moveChecker
+
     });
   });
 }
