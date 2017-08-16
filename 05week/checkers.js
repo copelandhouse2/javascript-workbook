@@ -166,6 +166,18 @@ function Game() {
   }
 
   this.validCheckerMove = function(source, dest) {
+    // just added this code to make this function easier to read.
+    const sRow = parseInt(source.charAt(0));
+    const sCol = parseInt(source.charAt(1));
+    const dRow = parseInt(source.charAt(0));
+    const dCol = parseInt(source.charAt(1));
+
+    if (this.board.grid[source.charAt(0)][source.charAt(1)].color !== playerTurn) {
+      this.messageToPlayer = `You are trying to move your opponent's piece.  Please select one of your checkers.`;
+      return false;
+    }
+
+    switch parseInt(source.charAt(0))
     return true;
   }
 
