@@ -169,25 +169,37 @@ function Game() {
     // just added this code to make this function easier to read.
     const sRow = parseInt(source.charAt(0));
     const sCol = parseInt(source.charAt(1));
-    const dRow = parseInt(source.charAt(0));
-    const dCol = parseInt(source.charAt(1));
+    const dRow = parseInt(dest.charAt(0));
+    const dCol = parseInt(dest.charAt(1));
 
-    if (this.board.grid[source.charAt(0)][source.charAt(1)].color !== playerTurn) {
+    // Checking to make sure source checker belongs the player
+    if (this.board.grid[sRow][sCol].color !== playerTurn) {
       this.messageToPlayer = `You are trying to move your opponent's piece.  Please select one of your checkers.`;
       return false;
     }
 
-    switch parseInt(source.charAt(0))
+    // Checking to make sure destination square is empty
+    if (this.board.grid[dRow][dCol]) {
+      this.messageToPlayer = `Destination is invalid.`;
+      return false;
+    }
+
+    // if playerTurn
     return true;
   }
 
-  this.moveChecker = function(source, dest) {
+  this.moveChecker = (source, dest) => {
     // console.log('in moveChecker()');  /** DEBUG **/
     if (this.validEntry(source, dest)) {
       // console.log('in IF validEntry()');  /** DEBUG **/
       if (this.validCheckerMove(source, dest)) {
+        if (Math.abs(dest.charAt(0) - source.charAt(0)) === 2) {  // we have a jump
+          let kRow = dest.charAt(0) - source.charAt(0) > 0? source.charAt(0) + 1 : dest.charAt(0) + 1;
+          let kCol = dest.charAt(1) - source.charAt(1) > 0? source.charAt(1) + 1 : dest.charAt(1) + 1;
+        }
         this.board.grid[dest.charAt(0)][dest.charAt(1)] = this.board.grid[source.charAt(0)][source.charAt(1)];
         this.board.grid[source.charAt(0)][source.charAt(1)] = null;
+
       } else {  // invalid move.  Try again.
         return false;
       }
