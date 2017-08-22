@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomIndex = getRandomInt(0, boardColors.length);
         this.code.push(randomIndex);
       }
+      /**** COMMENT OUT FOR GAME ***/
+      this.showAnswer();
       return true;
 
       function getRandomInt(min, max)  {
@@ -29,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showAnswer: function() {
       let ansPegs = document.getElementById('answerRow').childNodes;
-      console.log(ansPegs);
       for (let i=0; i<ansPegs.length-1; i++) {
         ansPegs[i].className = `peg ${boardColors[this.code[i]]}`;
       }
@@ -49,73 +50,94 @@ document.addEventListener('DOMContentLoaded', () => {
         currentGuess.pegs.push(selectedColor);  // push our peg onto current guess
         this['guesses'].push(currentGuess);  // push our new current guess object onto guesses array.
       }
-      console.log(this['guesses']);
-      // Calling viewBoard.  Pass, row, col, and color.
-      this.viewBoard(this['guesses'].length-1,
-      this['guesses'][this['guesses'].length - 1].pegs.length-1, selectedColor);
+      // console.log(this['guesses']);
+      this.displayRow();
     },  // populateChoice()
 
-    // viewBoard handles 2 functions a) it populates a peg.  Using row, column, color,
-    // it will append a color class onto the td cell with same matching row, col.
-    // b) viewBoard also handles clearing out a row.  If col, pegColor is null,
-    // viewBoard, will clear the pegs from the row.  We accomplish this by removing
-    // the color class.
-    viewBoard: function(row, col = null, pegColor = null) {
-      console.log(row, col, pegColor);
-      let guessRows = document.getElementById('boardTbl').childNodes;
+    // displayRow handles 3 functions
+    //   a) it populates a peg.
+    //   b) handles clearing out a row.
+    //   c) Displays the hint
+    // displayRow is generic and always fills in the entire row for the current Guess
+    // There is some slight inefficiencies since I am repopulating the colors
+    // for previous pegs.
+    displayRow: function() { //, col = null, pegColor = null) {
+      // console.log(row, col, pegColor);
+      const row = this['guesses'].length-1;
+      console.log(row);
+      const guessRows = document.getElementById('boardTbl').childNodes;
       console.log(guessRows[row]);
       const guessCols = guessRows[row].childNodes;
       console.log(guessCols);
-      if (pegColor) {  // When we pass col, pegColor, we are setting a peg
-        guessCols[col].className = `peg ${boardColors[pegColor]}`;
-      } else {  // here no pegColor was found.  We will clear the row.
-        for (let i=0; i<4; i++) {
+      console.log(this['guesses'][row]);
+      for (let i=0; i<5; i++) {
+        if (i === 4) {
+          console.log('if i=4');
+          guessCols[i].textContent = this['guesses'][row].hint;
+        } else if (this['guesses'][row].pegs[i]) {
+          console.log('setting peg');
+          guessCols[i].className = `peg ${boardColors[this['guesses'][row].pegs[i]]}`;
+        } else {
+          console.log('clearing peg');
           guessCols[i].className = `peg`;
         }
       }
-    },  // viewBoard()
-    generateHint: function() {
+    },  // displayRow()
+    // Passing in strings to GenerateHint.  First off, I lifted this code
+    // from my first version of the game and it used strings as input, then
+    // converted those strings into an array.
+    // Second.  This is my way of creating a new temp array.
+    // Since passing arrays are by reference, when I  copied my
+    // my guesses and code array and manipulated those copies
+    // it was affecting the original array.
+    generateHint: function(answer, guess) {
+      console.log('In generate hint');
       // Initializing...
       let exactMatch = 0;
       let correctPeg = 0;
       let matchIndex = -1;
       // creating arrays out of the strings.
-      let solutionArr = this['code'];
-      let myGuessArr = this['guesses'][this['guesses'].length-1].pegs;
+      let solutionArr = answer.split('');
+      let myGuessArr = guess.split('');
       console.log(solutionArr);
       console.log(myGuessArr);
       // This piece of code tests for exact match
       myGuessArr.forEach((peg, index) => {
-        if (peg == solutionArr[index]) {
+        if (peg === solutionArr[index]) {
           exactMatch++;
           // clear out value.  This sets us up to look for correct peg test later.  These won't be considered.
           solutionArr[index] = null;
           myGuessArr[index] = null;
         }
       });
+      console.log('after match, before correct peg');
+      console.log(solutionArr);
+      console.log(myGuessArr);
 
       // This piece of code tests for correct peg only
       myGuessArr.forEach((peg) => {
         if (peg) {  // peg could be null from previous forEach statement.
-          matchIndex = solutionArr.indexOf(parseInt(peg));  // Let's find a matching peg in the solution!
+          matchIndex = solutionArr.indexOf(peg);  // Let's find a matching peg in the solution!
           if (matchIndex !== -1) {  // We found a peg match in the string.
             correctPeg++
             solutionArr[matchIndex] = null;  // clear out value so value won't be considered with next peg tests.
           }
         }  // closing brace for if (peg)
       });
-      console.log(`${exactMatch}-${correctPeg}`);
-      this['guesses'][this['guesses'].length-1].hint = `${exactMatch}-${correctPeg}`;
+      console.log('after correct peg');
+      console.log(solutionArr);
+      console.log(myGuessArr);
+      console.log(`${exactMatch}  |  ${correctPeg}`);
+      return `${exactMatch}  |  ${correctPeg}`;
     } // generateHint
   }    // board object
 
   createPegCanvas();
   addListenersToButtons();
-  // console.log(board.code);
-  board.createCode();
   generateBoard();
-  board.showAnswer();
-  // viewBoard();
+  board.createCode();
+  // board.showAnswer();
+
 
   function createPegCanvas() {
     const colorsCanvas = document.getElementById('boardColors');
@@ -123,39 +145,59 @@ document.addEventListener('DOMContentLoaded', () => {
       const pegColor = document.createElement('div');
       pegColor.id = i;
       pegColor.className = `${boardColors[i]} box`;
-      // chooseSection.textContent = boardColors[i];
       pegColor.addEventListener('click', (color) => {
-        // console.log(color.target.textContent, color.target.id);
         board.populateChoice(color.target.id);
-        // console.log('you clicked me');
       });
       colorsCanvas.appendChild(pegColor);
-      // let theBody = document.getElementsByTagName('body')[0];
-      // theBody.appendChild(boardColorsCanvas);
     }
-  }
+  }  // createPegCanvas()
 
   function addListenersToButtons() {
+    //** Submit Guess button **//
+    // This button take the current row and first checks for a win.
+    // If there is a win, it congratulates the user
+    // If there is no win, it calls
     const checkBtn = document.getElementsByName('submit');
     checkBtn[0].addEventListener('click', () => {
-      board.generateHint();
-      // const currentGuess = new guess();
-      board['guesses'].push(new guess());  // Adding a new guess row.
-
+      const currentGuess = board['guesses'][board['guesses'].length-1];
+      const theCode = board['code'].join('');  // makes it simpler to compare
+      const theGuess = currentGuess.pegs.join('');  // makes it easy to compare
+      if (theCode === theGuess) {
+        alert('Wow, you won!  Press New Game to restart');
+        const clearBtn = document.getElementsByName('clear');
+        clearBtn[0].disabled = true;
+        checkBtn[0].disabled = true;
+      } else {
+        currentGuess['hint'] = board.generateHint(theCode, theGuess);
+        board.displayRow();
+        board['guesses'].push(new guess());  // Adding a new guess row.
+      }
     });
 
-    // We want the ability to clear the current prior prior to submitting.
-    // This will be the user the ability to change their answer.
+    // We want the ability to clear the current row prior to submitting.
+    // This will give the player the ability to change their answer.
     const clearBtn = document.getElementsByName('clear');
     clearBtn[0].addEventListener('click', () => {
-      // generateHint();
       board['guesses'].pop();  // removing the current guess.
       board['guesses'].push(new guess())  // Adding an empty guess.
-      board.viewBoard(board['guesses'].length-1);
-
+      board.displayRow();
     });
 
-  }
+    // New Game button.  Needs to clear out code and guesses arrays.
+    // Needs to clear the entire board.
+    const newBtn = document.getElementsByName('new');
+    newBtn[0].addEventListener('click', () => {
+      board['code'] = [];  // clearing array.
+      board['guesses'] = [];  // clearing array.
+      clearBoard();
+      const checkBtn = document.getElementsByName('submit');
+      const clearBtn = document.getElementsByName('clear');
+      clearBtn[0].disabled = false;
+      checkBtn[0].disabled = false;
+      board.createCode();
+    });
+  }  // addListenersToButtons()
+
   function generateBoard() {
     // This section creates the code breaker's guess.
     const boardTable = document.createElement("table");
@@ -184,18 +226,22 @@ document.addEventListener('DOMContentLoaded', () => {
       j < 4? ansCol.className = `peg` : null;
       ansRow.appendChild(ansCol);
     }
-
   }  // ending to generateBoard
 
+function clearBoard() {
+  const guessRows = document.getElementById('boardTbl').childNodes;
+  console.log(guessRows);
+  guessRows.forEach((row) => {
+    const pegsAndHint = row.childNodes;
+    pegsAndHint.forEach((val, index) => {
+      index !== 4? val.className = `peg` : val.textContent = null;
+    });
+  });
+  const ansRow = document.getElementById('answerRow').childNodes;
+  console.log(ansRow);
+  ansRow.forEach((val, index) => {
+      index !== 4? val.className = `peg` : null;
+  });
+}  // clearBoard()
 
-  // Submit guess
-  //   make sure all pegs are assigned.
-  //   if guess = code then
-  //     Congrats, you win.
-  //   else
-  //     Return supplyHint().
-
-  // Clear button
-  //   clear current row.
-
-});
+});  //document.addEventListener('DOMContentLoaded'...
