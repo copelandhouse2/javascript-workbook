@@ -7,21 +7,64 @@ class TicTacToe extends React.Component {
       this.state = {
           turn: 'X',
       };
-      this.message = '';
+      // this.message = '';
   }
+
+  checkForWin = (myObj) => {
+  // wins array stores all the win combinations.  wincombo array is one of the wins.
+  // wins.some ... at least one of these win combos needs to be true.
+  // wincombo.every ... for a win, all the squares in the particular wincombo must equal the players token (X or O)
+  const wins = [
+    ['cell0','cell1','cell2']
+    // , ['cell3','cell4','cell5'], ['cell6','cell7','cell8'],  // horizontal wins
+    // ['cell0','cell3','cell6'], ['cell1','cell4','cell7'], ['cell2','cell5','cell8'],  // vertical wins
+    // ['cell0','cell4','cell8'], ['cell2','cell4','cell6']            // diagonal wins
+  ];
+
+  const stateKeys = Object.keys(myObj).splice(1);
+  console.log(stateKeys, myObj);
+  // if (wins[0].every(mykey => {
+  //       // console.log('In every');
+  //       // console.log('here', key, myObj[key], myObj['cell1'], myObj['cell2']);
+  //       // console.log(wins[0]);
+  //       this.state[mykey] === 'X'; //myObj['turn'];
+  //     })
+  //   ) { return true; }
+  //   else {
+  //     return false;
+  //   }
+  //   }
+  // );
+  return wins.some(winCombo => {winCombo.every((key) => {
+        console.log('In every');
+        console.log(winCombo);
+        console.log('here', key, myObj[key], myObj['turn']);
+        myObj[key] === myObj['turn'];
+      })
+    }
+  );
+
+  // return false;
+}
+
   handleClick=(cell)=>{
       const state = {...this.state};
-      const // this.state.turn? 'X' : 'O';
       if (!state[cell]) {
         state[cell] = this.state.turn;
-        state['turn'] = this.state.turn === 'X'? 'O' : 'X';  // Switch between X and O
-        this.message = '';
-
+        // console.log(state);
+        // console.log(Object.values(state).splice(1).length);
+        console.log(this.checkForWin(state));
+        if (this.checkForWin(state)) {  //checkForWin returns TRUE if someone won.  It returns FALSE if no win yet.
+          this.message = `Congratulations ${this.state.turn}.  You won!  Start a new game by refreshing`;
+        } else if (Object.values(state).splice(1).length == 9) {  // If there have been 9 turns but no winner.  It is a tie.
+          this.message = `We have a tie folks.  Start a new game by refreshing`;
+        } else {
+          state['turn'] = this.state.turn === 'X'? 'O' : 'X';  // Switch between X and O
+          this.message = '';
+        }
       } else {
-        this.message = 'Square occupied.  Please select a different square';
+        this.message = 'Try again please.  That square is taken.';
       }
-      // toggleTurn();
-      // this.state.turn? 'X' : 'O';
       this.setState(state)
   };
   render() {
@@ -46,6 +89,14 @@ class TicTacToe extends React.Component {
       </div>
     );
   }
+  // checkForWin(myObj) {
+  // // wins array stores all the win combinations.  wincombo array is one of the wins.
+  // // wins.some ... at least one of these win combos needs to be true.
+  // // wincombo.every ... for a win, all the squares in the particular wincombo must equal the players token (X or O)
+  // const stateKeys = Object.keys(state).splice(0,1);
+  // return wins.some(winCombo => winCombo.every(key => stateKeys[key] === state['turn']));
+  // }
+
 }
 
 ReactDOM.render(<TicTacToe />, document.getElementById('tic-tac-toe'));
