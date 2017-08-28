@@ -7,66 +7,47 @@ class TicTacToe extends React.Component {
       this.state = {
           turn: 'X',
       };
-      // this.message = '';
-  }
+    }
 
-  checkForWin = (myObj) => {
+  checkForWin(myObj) {
   // wins array stores all the win combinations.  wincombo array is one of the wins.
   // wins.some ... at least one of these win combos needs to be true.
-  // wincombo.every ... for a win, all the squares in the particular wincombo must equal the players token (X or O)
-  const wins = [
-    ['cell0','cell1','cell2']
-    // , ['cell3','cell4','cell5'], ['cell6','cell7','cell8'],  // horizontal wins
-    // ['cell0','cell3','cell6'], ['cell1','cell4','cell7'], ['cell2','cell5','cell8'],  // vertical wins
-    // ['cell0','cell4','cell8'], ['cell2','cell4','cell6']            // diagonal wins
-  ];
+  // aWin.every ... for a win, all the squares in the particular win must equal the players token (X or O)
+    const wins = [
+      [0,1,2], [3,4,5], [6,7,8],  // horizontal wins
+      [0,3,6], [1,4,7], [2,5,8],  // vertical wins
+      [0,4,8], [2,4,6]            // diagonal wins
+    ];
 
-  const stateKeys = Object.keys(myObj).splice(1);
-  console.log(stateKeys, myObj);
-  // if (wins[0].every(mykey => {
-  //       // console.log('In every');
-  //       // console.log('here', key, myObj[key], myObj['cell1'], myObj['cell2']);
-  //       // console.log(wins[0]);
-  //       this.state[mykey] === 'X'; //myObj['turn'];
-  //     })
-  //   ) { return true; }
-  //   else {
-  //     return false;
-  //   }
-  //   }
-  // );
-  return wins.some(winCombo => {winCombo.every((key) => {
-        console.log('In every');
-        console.log(winCombo);
-        console.log('here', key, myObj[key], myObj['turn']);
-        myObj[key] === myObj['turn'];
-      })
-    }
-  );
+    return wins.some(aWin => aWin.every(index => myObj[`cell${index}`] === myObj['turn']));
+  }  // checkForWin()
 
-  // return false;
-}
-
-  handleClick=(cell)=>{
-      const state = {...this.state};
-      if (!state[cell]) {
-        state[cell] = this.state.turn;
-        // console.log(state);
-        // console.log(Object.values(state).splice(1).length);
-        console.log(this.checkForWin(state));
-        if (this.checkForWin(state)) {  //checkForWin returns TRUE if someone won.  It returns FALSE if no win yet.
-          this.message = `Congratulations ${this.state.turn}.  You won!  Start a new game by refreshing`;
-        } else if (Object.values(state).splice(1).length == 9) {  // If there have been 9 turns but no winner.  It is a tie.
-          this.message = `We have a tie folks.  Start a new game by refreshing`;
-        } else {
-          state['turn'] = this.state.turn === 'X'? 'O' : 'X';  // Switch between X and O
-          this.message = '';
-        }
+  // handleClick.  Method is called when a square is clicked.  Based on onClick
+  // event in each div data-cell below.
+  // The TTT logic is in here.  a) Making sure it is valid move b) validating win c) messaging.
+  handleClick(cell) {
+    const state = { ...this.state };
+    if (!state[cell]) {
+      state[cell] = this.state.turn;
+      // console.log('value of checkForWin', this.checkForWin(state));
+      if (this.checkForWin(state)) {  //checkForWin returns TRUE if someone won.  It returns FALSE if no win yet.
+        this.message = `Congratulations ${this.state.turn}.  You won!  Start a new game by refreshing`;
+        // If there have been 9 turns but no winner.  It is a tie.
+        // Splicing to get rid of turn key value pair.  That will give me the
+        // correct number of cells populated so far.
+      } else if (Object.values(state).splice(1).length == 9) {
+        this.message = `We have a tie folks.  Start a new game by refreshing`;
       } else {
-        this.message = 'Try again please.  That square is taken.';
+        state['turn'] = this.state.turn === 'X'? 'O' : 'X';  // Switch between X and O
+        this.message = '';
       }
-      this.setState(state)
+    } else {
+      this.message = 'Try again please.  That square is taken.';
+    }
+    this.setState(state)
   };
+
+  // render method displays the TTT board.
   render() {
     return (
       <div>
@@ -89,13 +70,6 @@ class TicTacToe extends React.Component {
       </div>
     );
   }
-  // checkForWin(myObj) {
-  // // wins array stores all the win combinations.  wincombo array is one of the wins.
-  // // wins.some ... at least one of these win combos needs to be true.
-  // // wincombo.every ... for a win, all the squares in the particular wincombo must equal the players token (X or O)
-  // const stateKeys = Object.keys(state).splice(0,1);
-  // return wins.some(winCombo => winCombo.every(key => stateKeys[key] === state['turn']));
-  // }
 
 }
 
