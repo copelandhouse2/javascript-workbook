@@ -5,7 +5,9 @@
 //
 // create object with 3 arrays?
 //
-// Click on a block (and stack)
+// Create functional components: Stack and Block
+//
+// Click on a stack
 // Test for popped block.
 // If popped block then
 //   If validMove() then
@@ -48,85 +50,117 @@
 //   end if
 
 ***********************************************************/
+
+// Main driver class.
 class TowersOfHanoi extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+    const startArr = [100,75,50,25];
+    const winCount = startArr.length;
     this.state = {
-      stacks: {
-        1: [100,75,50,25],
-        2: [],
-        3: []
+      stacks: {               // My stacks object has 3 arrays for each stack
+        1: startArr.slice(),  // a place to store the popped block and the
+        2: [],                // winning count.
+        3: [],
+        popped: null,
+        winCount: winCount
       },
-      popped: {
-        stack: null,
-        block: null
-      }
+      message: '',           // message used to display messages to the user.
+      youWon: false          // Used to shut game down after win.
     }
   }  // Constructor
 
-  popOffBlock(stacks, sKey, popped) {
-    // popped
-    console.log('in popOffBlock');
-    popped['stack'] = sKey;
-    popped['block'] = stacks[sKey][stacks[sKey].length-1];
-    return popped;
+  // Need to ensure player is not placing a larger block on top of a smaller one.
+  validMove(popped, stack) {
+    if (stack.length === 0 || popped < stack[stack.length - 1]) {
+      return true;
+    }
+    return false;
   }
 
+  // Check for a win.  If stack 2 or 3 has all the blocks, then WIN.
+  checkForWin(stacks) {
+    // console.log('in checkForWin');
+    // console.log('Win criteria',stacks.winCount, stacks[2].length, stacks[3].length);
+    if (stacks[2].length === stacks.winCount || stacks[3].length === stacks.winCount) {
+      return true;
+    }
+    return false;
+  } // checkForWin()
+
+  // All the TOH logic is in here.
   handleClick(sKey) {
+    console.log('In handleClick!');
     // Creating an exact copy of stacks... one that is not by reference.
-    const stacks = {1:[],2:[],3:[]};
+    const stacks = {1:[],2:[],3:[],popped:null,winCount:null};
     stacks[1] = this.state.stacks[1].slice();
     stacks[2] = this.state.stacks[2].slice();
     stacks[3] = this.state.stacks[3].slice();
-    let popped = {stack:null,block:null};
-    popped['stack'] = this.state.popped['stack'];
-    popped['block'] = this.state.popped['block'];
-    console.log('popped before change', popped);
-    if (popped['block']) { //block was already popped.  Now I want to push block
-      // if (sKey) {
-      //   console.log('you clicked on me: '+ sKey);
-      // }
-      // else {
-      //   console.log('you clicked on nothing');
-      // }
-      popped['stack'] = null;
-      popped['block'] = null;
+    stacks['popped'] = this.state.stacks['popped'];
+    stacks['winCount'] = this.state.stacks['winCount'];
 
-      // No block was popped.  Therefore, we are clicking stack to pop a
-      // block off.  Let's make sure stack has blocks to pop off.
-    } else if (stacks[sKey].length > 0) { // Ok, no block was popped
-      console.log('stacks length', stacks[sKey].length);
-      popped = this.popOffBlock(stacks, sKey, popped);
-      console.log('popped after', popped);
-      // No popped block.  User click empty stack.  Tell User
-      // he is a complete dolt.
-    } else {
-      console.log('Please select a stack with blocks.');
+    let message = this.state.message;
+    let youWon = this.state.youWon;
+
+    if(stacks['popped']) {  // We have a popped block.  Need to push block
+      if (this.validMove(stacks['popped'], stacks[sKey])) {
+        stacks[sKey].push(stacks['popped']);
+        stacks['popped'] = null;
+        message = '';
+        if (this.checkForWin(stacks) && !youWon) {
+          message = 'Congratulations, you solved Towers of Hanoi!';
+          youWon = true;
+          this.setState({stacks: stacks, message: message, youWon: youWon});
+        }
+      } else {
+        message = 'Invalid move.  Cannot place larger block on smaller one';
+      }
+    } else {  // We need to pop a block off the selected stack.
+      if (stacks[sKey].length > 0) {
+        stacks['popped'] = stacks[sKey].pop();
+        message = '';
+      } else {
+        message = 'You selected an empty stack.  Please try again.';
+      }
     }
-    this.setState({stacks: stacks, popped: popped,});
-  }
+    youWon? null : this.setState({stacks: stacks, message: message, youWon: youWon});
 
-  checkForWin() {
-    console.log('in checkForWin');
-  }
+  }  // handleClick()
 
+  // This is the main display for the game.  I display a Stack object.
+  // The stack objects display the block objects.
   render() {
-    // let block;
     return (
       <div>
-        <div data-stack="1" onClick={()=>this.handleClick(1)}>
-          <div data-block="100"></div>
-          <div data-block="75" ></div>
-          <div data-block="50" ></div>
-          <div data-block="25" ></div>
+        <div>
+          <h2>Towers of Hanoi by Craig... React version!</h2>
+          <Pop block={this.state.stacks['popped']} />
         </div>
-        <div data-stack="2" onClick={()=>this.handleClick(2)}>
+        <div id="board">
+          <Stack
+            id="1"
+            blocks={this.state.stacks[1]}
+            click={this.handleClick.bind(this)}
+          />
+          <Stack
+            id="2"
+            blocks={this.state.stacks[2]}
+            click={this.handleClick.bind(this)}
+          />
+          <Stack
+            id="3"
+            blocks={this.state.stacks[3]}
+            click={this.handleClick.bind(this)}
+          />
         </div>
-        <div data-stack="3" onClick={()=>this.handleClick(3)}>
+        <div>
+          <h2>{this.state.message}</h2>
         </div>
+
       </div>
     );
   }
 }
 
+// Rendering TowersOfHanoi class within div id=towers-of-hanoi
 ReactDOM.render(<TowersOfHanoi />, document.getElementById('towers-of-hanoi'));
