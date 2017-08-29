@@ -1,10 +1,16 @@
 'use strict';
 
+
+
 class TicTacToe extends React.Component {
+
 
   constructor(props) {
     super(props);
       this.state = {
+          turn: 'X',
+      };
+      this.initialState = {
           turn: 'X',
       };
     }
@@ -47,6 +53,40 @@ class TicTacToe extends React.Component {
     this.setState(state)
   };
 
+  resetBoard () {
+    console.log('Button clicked', this.state, this.initialState);
+    // const state = { ...this.state };
+    // this.state = state;
+    // const myState = this.initialState.turn;
+    const keyArr = Object.keys(this.state);
+    console.log(keyArr);
+    keyArr.forEach(key => {
+      if (key === 'turn') {
+        console.log('in the if.true', key);
+        this.state[key] = 'X';
+      } else {
+        console.log('in the if.false', key);
+        delete this.state[key];
+      }
+      this.message = '';
+    });
+
+    // for (let i=0; i < keyArr.length; i++) {
+    //   console.log('in the for', keyArr[i])
+    //   if (keyArr[i] === 'turn') {
+    //     this.state[keyArr[i]] = 'X';
+    //   } else {
+    //     delete this.state[keyArr[i]];
+    //   }
+    // }
+
+    // keyArr.map((key) => {
+    //
+    // });
+    this.setState(this.state)
+    console.log(this.state);
+    // this.render();
+  }
   // render method displays the TTT board.
   render() {
     return (
@@ -66,7 +106,9 @@ class TicTacToe extends React.Component {
           <div data-cell="7" onClick={() => this.handleClick('cell7')}>{this.state.cell7}</div>
           <div data-cell="8" onClick={() => this.handleClick('cell8')}>{this.state.cell8}</div>
         </div>
-        <div id='announce-winner'>{this.message}</div>
+          <div id='announce-winner'>{this.message}</div>
+          <button type="button" onClick={() => this.resetBoard()}>Reset to Play Again</button>
+
       </div>
     );
   }
