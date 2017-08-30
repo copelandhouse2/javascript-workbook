@@ -140,17 +140,17 @@ class TowersOfHanoi extends React.Component {
           <Stack
             id="1"
             blocks={this.state.stacks[1]}
-            click={this.handleClick.bind(this)}
+            handleStackClick={this.handleClick.bind(this)}
           />
           <Stack
             id="2"
             blocks={this.state.stacks[2]}
-            click={this.handleClick.bind(this)}
+            handleStackClick={this.handleClick.bind(this)}
           />
           <Stack
             id="3"
             blocks={this.state.stacks[3]}
-            click={this.handleClick.bind(this)}
+            handleStackClick={this.handleClick.bind(this)}
           />
         </div>
         <div>

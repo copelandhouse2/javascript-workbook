@@ -5,10 +5,13 @@
 // all the blocks assigned in stacks arrays.
 const Stack = (props) => {
 
-  const updateMe = () => props.click(props.id);
+  // const updateMe = ;
 
   return (
-    <div data-stack={props.id} onClick={updateMe}>
+    <div
+      data-stack={props.id}
+      onClick={() => props.handleStackClick(props.id)}
+      >
       {
         props.blocks.map((blockSize,index) =>
           <Block
