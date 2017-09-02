@@ -32,6 +32,11 @@ class App extends Component {
       });
       this.setState({timeLine: deleteCardList});
   };
+
+  editEntry={id}=>{
+    console.log('In editEntry', id);
+  };
+
   render() {
     // let Button = ReactBootstrap;
     return (
@@ -41,8 +46,8 @@ class App extends Component {
             value={this.state.inputValue}
             type="text"
         />
-      <Button bsStyle="success" bsSize="large" >Submit</Button>
-        <TimeLine deleteStatus={this.deleteStatus} list={this.state.timeLine} />
+        <Button bsStyle="Primary" bsSize="large" >Submit</Button>
+        <TimeLine edit={this.editEntry} deleteStatus={this.deleteStatus} list={this.state.timeLine} />
       </div>
     );
   }
