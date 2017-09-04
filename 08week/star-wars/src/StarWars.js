@@ -24,7 +24,7 @@ import SquareClass from './SquareClass';
 //     planets
 //       questionPrefix: "Where is"
 //       squares[]  // 5 of them.
-//     spaceships
+//     ships
 //       questionPrefix: "What is"
 //       squares[]
 //     vehicles
@@ -112,67 +112,64 @@ class StarWars extends Component {
       },
       input: '',
       message: '',
+      question: {
+        planets:  'Where is',
+        ships:    'What is',
+        vehicles: 'What is',
+        people:   'Who is',
+        films:    'What is',
+        species:  'Who are the'
+      },
       board: {
-        planets:    { prefix: 'Where is'   , squares: [] },
-        spaceships: { prefix: 'What is'    , squares: [] },
-        vehicles:   { prefix: 'What is'    , squares: [] },
-        people:     { prefix: 'Who is'     , squares: [] },
-        films:      { prefix: 'What is'    , squares: [] },
-        species:    { prefix: 'Who are the', squares: [] }
+        planets:  [],
+        ships:    [],
+        vehicles: [],
+        people:   [],
+        films:    [],
+        species:  []
       }
     };  // this.game object
 
     this.state = {
-      round: this['game']['round'],
-      currentPlayer: this['game']['currentPlayer'],
+      round: this.game['round'],
+      currentPlayer: this.game['currentPlayer'],
       input: '',
       message: '',
-      // board: {}
-      planetsSquares: [],
-      spaceshipsSquares: [],
-      vehiclesSquares: [],
-      peopleSquares: [],
-      filmsSquares: [],
-      speciesSquares: []
+      board: {}
     };  // this.state object
   }  //Constructor
 
   initState() {
     console.log('initialize');
-    [1,2,3,4,5].forEach((id, index)=>{
-      this.game['board']['planets']['squares'].push(new SquareClass(id));
-      this.game['board']['spaceships']['squares'].push(new SquareClass(id));
-      this.game['board']['vehicles']['squares'].push(new SquareClass(id));
-      this.game['board']['people']['squares'].push(new SquareClass(id));
-      this.game['board']['films']['squares'].push(new SquareClass(id));
-      this.game['board']['species']['squares'].push(new SquareClass(id));
+    [0,1,2,3,4].forEach((id, index)=>{
+      const newSquare = new SquareClass(id);
+      newSquare.question = `What is 1 + ${id}`;
+      newSquare.answer = 1 + id;
+      this.game['board']['planets'].push(newSquare);
+      // console.log('planets[id]', this.game['board']['planets'][id]);
+      this.game['board']['ships'].push(new SquareClass(id));
+      this.game['board']['vehicles'].push(new SquareClass(id));
+      this.game['board']['people'].push(new SquareClass(id));
+      this.game['board']['films'].push(new SquareClass(id));
+      this.game['board']['species'].push(new SquareClass(id));
     });
     console.log('this.game.board',this.game['board']);
+    // console.log('planets[id]', this.game['board']['planets'][0]);
 
   }
 
   startClick = ()=> {
     console.log('startClick');
     this.initState()
-    console.log('this.game...planets again',this.game['board']['planets']['squares']);
-    /***************  LINE BELOW NOT WORKING.  NOT ABLE TO SET STATE ******/
-    // this.setState({ planetsSquares : this.game['board']['planets']['squares'] });
-    this.setState(
-      {
-      planetsSquares : this.game['board']['planets']['squares'],
-      spaceshipsSquares : this.game['board']['spaceships']['squares'],
-      vehiclesSquares : this.game['board']['vehicles']['squares'],
-      peopleSquares : this.game['board']['people']['squares'],
-      filmsSquares : this.game['board']['films']['squares'],
-      speciesSquares : this.game['board']['species']['squares'],
-      }
-    );
+    // console.log('this.game...planets again',this.game['board']['planets']);
+    this.setState( { board : this.game['board'] } );
   }
 
-  handleClick = ()=> {
+  handleClick = (category, square)=> {
     console.log('handleClick');
-    /***** CODE HERE ****/
-
+    console.log('clicked square', category, square);
+    this.game['board'][category][square]['squareState'] = 'activeA';
+    this.setState( { board : this.game['board'] } );
   }  // handleClick
 
   handleKey = (event)=> {
@@ -193,22 +190,26 @@ class StarWars extends Component {
         console.log('you pressed the P key');
         break;
       default:
-        console.log('you pressed the P key');
+        console.log('you pressed the some other key');
     }
-    // if (x === 'q' || x=== 'Q') {
-    //   console.log('you pressed the Q key');
-    // } else if
 
   }  // handleKey
 
-  // this.initState();
   render() {
     console.log('board',this.state);
 
     return (
       <div>
-        <Control startClick={this.startClick} />
-        <Board handleKey={this.handleKey}/>
+        <Control
+          startClick={this.startClick}
+        />
+
+        <Board
+          handleClick={this.handleClick}
+          handleKey={this.handleKey}
+          board = {this.state['board']}
+        />
+
       </div>
     );
   }  // render

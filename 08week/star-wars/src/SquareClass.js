@@ -23,8 +23,8 @@ class SquareClass {
     this.attempt = null;
     this.gotCorrect = '';
     this.dailyDouble = false;
-    this.r1Money = squareID * 100;
-    this.r2Money = squareID * 200;
+    this.r1Money = (squareID+1) * 100;
+    this.r2Money = (squareID+1) * 200;
   }
 
 }  // Square class

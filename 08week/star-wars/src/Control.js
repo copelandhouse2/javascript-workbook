@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
+import {Button} from 'react-materialize'
 
 class Control extends Component {
 
   render() {
-    /***** CODE HERE ****/
     return (
       <div id="control">
         <h1>Star Wars Jeopardy</h1>
-        <button type="button" onClick={this.props.startClick}>Start Game</button>
-        // <Butgit aton waves='light'>EDIT ME<Icon left>save</Icon></Button>
+        <Button  className='blue accent-4 tooltipped' data-tooltip='May the force be with you!' waves='yellow'  onClick={this.props.startClick}>Start Game</Button>
       </div>
     );
   }  // return
@@ -16,3 +15,4 @@ class Control extends Component {
 }  // class Control
 
 export default Control;
+// <button type="button" onClick={this.props.startClick}>Start Game</button>

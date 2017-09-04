@@ -1,18 +1,35 @@
 import React from 'react';
 import Square from './Square';
+import {Collection, CollectionItem} from 'react-materialize'
 
 const Category = (props) => {
 
   return (
-    /***** CODE HERE ****/
-    // Just dummy data below.
-    <div>
-      <h2>{props.id}</h2>
-      <Square id="1" money="$100" />
-      <Square id="2" money="$200" />
-      <Square id="3" money="$300" />
-      <Square id="4" money="$400" />
-      <Square id="5" money="$500" />
+    <div id='category'>
+      <Collection
+        s={1}
+        header={props.id.split(' ')
+                         .map(w => w[0].toUpperCase() + w.substr(1).toLowerCase())
+                         .join(' ')}
+      >
+        {
+          props.squares.map((obj, idx) =>
+            <CollectionItem
+              key={idx}
+              className='blue accent-4'
+              id='collectionItem'
+              onClick={() => props.handleClick(props.id, idx)}
+            >
+              <Square
+                category={props.id}
+                square={obj}
+                key={idx}
+                handleClick={props.handleClick}
+              />
+            </CollectionItem>
+          )
+        }
+      </Collection>
     </div>
   ); // return
 
