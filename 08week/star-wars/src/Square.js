@@ -5,12 +5,19 @@ const Square = (props)=> {
 
   return (
     props.square['squareState'] === 'activeA'? (
-      <div className = 'blue' onClick={() => props.handleClick(props.category, props.square['id'])}>
+      <div className = 'blue'>
         <h4>{props.square['question']}</h4>
       </div>
-    ) :
-    (
-      <div className = 'blue' onClick={() => props.handleClick(props.category, props.square['id'])}>
+    ) : props.square['squareState'] === 'activeB'? (
+      <div className = 'blue'>
+        <h4>Active B</h4>
+      </div>
+    ) : props.square['squareState'] === 'complete'? (
+      <div className = 'blue'>
+        <h4>Complete</h4>
+      </div>
+    ) : (  // default
+      <div className = 'blue'>
         <h4>{props.square['r1Money']}</h4>
       </div>
     )
