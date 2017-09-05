@@ -17,7 +17,6 @@ class Board extends Component {
         <div
           className='black'
           id="board"
-          onKeyPress={this.props.handleKey}
         >
         {
           categories.map((cat, idx) =>
@@ -46,3 +45,5 @@ export default Board;
 // <Category id="people"/>
 // <Category id="films"/>
 // <Category id="species"/>
+
+// onKeyPress={this.props.handleKey}
