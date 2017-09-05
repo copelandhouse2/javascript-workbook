@@ -9,22 +9,28 @@ class Board extends Component {
     // console.log(categories);
     // console.log(this.props.board['vehicles']);
     return (
-      <div
-        className='black'
-        id="board"
-        onKeyPress={this.props.handleKey}
-      >
-      {
-        categories.map((cat, idx) =>
-          <Category
-            id={cat}
-            squares={this.props.board[cat]}
-            key={idx}
-            handleClick={this.props.handleClick}
-          />
-        )
-      }
-      </div>
+      this.props.boardState === 'question'? (
+        <div>
+          <h2>{this.props.board[this.props.actCat][this.props.actSq]['question']}</h2>
+        </div>
+      ) : (
+        <div
+          className='black'
+          id="board"
+          onKeyPress={this.props.handleKey}
+        >
+        {
+          categories.map((cat, idx) =>
+            <Category
+              id={cat}
+              squares={this.props.board[cat]}
+              key={idx}
+              handleClick={this.props.handleClick}
+            />
+          )
+        }
+        </div>
+      )
     ); // return
   }  // render
 

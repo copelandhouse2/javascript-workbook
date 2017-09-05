@@ -4,17 +4,17 @@ const Square = (props)=> {
 
 
   return (
-    props.square['squareState'] === 'activeA'? (
+    props.square['squareState'] === 'active'? (
       <div className = 'blue'>
-        <h4>{props.square['question']}</h4>
+        <h6>{props.square['question']}</h6>
       </div>
-    ) : props.square['squareState'] === 'activeB'? (
+    ) : props.square['squareState'] === 'steal'? (
       <div className = 'blue'>
-        <h4>Active B</h4>
+        <h6>Steal</h6>
       </div>
-    ) : props.square['squareState'] === 'complete'? (
+    ) : props.square['squareState'] === 'answer'? (
       <div className = 'blue'>
-        <h4>Complete</h4>
+        <h6>Answer</h6>
       </div>
     ) : (  // default
       <div className = 'blue'>
