@@ -4,15 +4,16 @@
 *******************************************************/
 import React, { Component } from 'react';
 import './App.css';
+// import './style.css';
 
 
 class Entry extends Component {
   render() {
     return (
-      <h3 class={this.props.color}>test
-        {this.props.story['title']}&nbsp;
-        <a href={this.props.story['url']} target="_blank" class={this.props.color}>
-          Click here!
+      <h3>
+        <a href={this.props.story['url']} target="_blank" className={this.props.color}
+>
+          {this.props.story['title']}
         </a>
       </h3>
     );
@@ -21,3 +22,4 @@ class Entry extends Component {
 
 export default Entry;
 // onClick = {this.props.handleClick}
+// className={this.props.color}
