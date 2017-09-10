@@ -11,6 +11,8 @@ class App extends Component {
     this.state = {
         inputValue: '',
         timeLine: [],
+        editCard: null,
+        editValue: '',
     }
   }
   handleChange(e){
@@ -25,6 +27,7 @@ class App extends Component {
       };
       this.setState({timeLine: [...this.state.timeLine, card], inputValue: ''})
   };
+
   deleteStatus=(id)=>{
       console.log(id ,this.state.timeLine);
       const deleteCardList = this.state.timeLine.filter((card, index) =>{
@@ -33,8 +36,20 @@ class App extends Component {
       this.setState({timeLine: deleteCardList});
   };
 
-  editEntry={id}=>{
-    console.log('In editEntry', id);
+  // These methods handle the editing task
+  initEdit=(id)=>{  // To activate edit mode
+    console.log('In initEdit', id);
+    this.setState({editCard: id});
+  };
+
+  handleChange2=(e)=>{
+    console.log('In handleChange2', e.target.value);
+    this.setState({editValue: e.target.value});
+  };
+
+  saveEdit=(id)=>{
+    console.log('In saveEdit', id);
+    this.setState({editCard: null});
   };
 
   render() {
@@ -46,8 +61,20 @@ class App extends Component {
             value={this.state.inputValue}
             type="text"
         />
-        <Button bsStyle="Primary" bsSize="large" >Submit</Button>
-        <TimeLine edit={this.editEntry} deleteStatus={this.deleteStatus} list={this.state.timeLine} />
+        <Button
+          id="button-timeline"
+          bsStyle="primary"
+          bsSize="large"
+          onClick={this.handleClick}>Submit</Button>
+        <TimeLine
+          deleteStatus={this.deleteStatus}
+          list={this.state.timeLine}
+          initEdit={this.initEdit}
+          editCard={this.state.editCard}
+          handleChange2={this.handleChange2}
+          editValue={this.state.editValue}
+          saveEdit={this.saveEdit}
+        />
       </div>
     );
   }

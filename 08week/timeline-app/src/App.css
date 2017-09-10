@@ -22,3 +22,18 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+#button-timeline {
+  margin-bottom: 20px;
+}
+
+.panel {
+  width: 402px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+#button-panel {
+  display: flex;
+  justify-content: space-around;
+}
