@@ -29,7 +29,7 @@ class App extends Component {
   };
 
   deleteStatus=(id)=>{
-      console.log(id ,this.state.timeLine);
+      // console.log(id ,this.state.timeLine);
       const deleteCardList = this.state.timeLine.filter((card, index) =>{
           return card.id !== id;
       });
@@ -38,18 +38,24 @@ class App extends Component {
 
   // These methods handle the editing task
   initEdit=(id)=>{  // To activate edit mode
-    console.log('In initEdit', id);
-    this.setState({editCard: id});
+    // console.log('In initEdit', id);
+    this.setState({editCard: id,});
   };
 
   handleChange2=(e)=>{
-    console.log('In handleChange2', e.target.value);
+    // console.log('In handleChange2', e.target.value);
     this.setState({editValue: e.target.value});
   };
 
   saveEdit=(id)=>{
-    console.log('In saveEdit', id);
-    this.setState({editCard: null});
+    // console.log('In saveEdit', id);
+    const timeLine=[...this.state.timeLine];
+    timeLine[id-1]['text'] = this.state.editValue;
+    this.setState({
+      timeLine: timeLine,
+      editCard: null,
+      editValue: ''
+    });
   };
 
   render() {
