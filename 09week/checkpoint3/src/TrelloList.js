@@ -6,7 +6,7 @@ class TrelloList extends Component {
 
   render() {
     return (
-      <div>
+      <div id="list">
         {
           this.props.cardList.map((aCard, idx) =>
             <TrelloCard
