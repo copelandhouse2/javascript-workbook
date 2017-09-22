@@ -1,0 +1,29 @@
+body {
+  background-color: rgb(88, 23, 23);
+}
+
+#canvas {
+  margin: 0px;
+  width: 80vw;
+  background-color: rgba(244, 191, 191, 0.35);
+  margin: auto;
+}
+
+#title {
+  text-align: center;
+}
+
+#main-container {
+  display: flex;
+}
+
+#list {
+  width: 50%;
+}
+#control {
+  display: flex;
+  align-items: flex-start;
+  width:50%;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
